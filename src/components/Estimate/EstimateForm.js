@@ -63,7 +63,7 @@ export default class EstimateForm extends Component {
     render() {
         const {estimateName, estimateCost, projectId, show} = this.state;
 
-        const estimateNameField =
+        const estimateNameInputField =
             <Form.Group as={Col} controlId="formGridEstimateName">
                 <Form.Label>Название сметы</Form.Label>
                 <Form.Control required autoComplete="off"
@@ -71,7 +71,7 @@ export default class EstimateForm extends Component {
                               value={estimateName} onChange={this.estimateChange}
                               placeholder="Введите название сметы"/>
             </Form.Group>
-        const estimateCostField =
+        const estimateCostInputField =
             <Form.Group as={Col} controlId="formGridEstimateCost">
                 <Form.Label>Стоимость сметы</Form.Label>
                 <Form.Control required autoComplete="off"
@@ -90,8 +90,8 @@ export default class EstimateForm extends Component {
                     <Form onSubmit={this.submitEstimate} id="estimateFormId">
                         <Card.Body>
                             <Form.Row>
-                                {estimateNameField}
-                                {estimateCostField}
+                                {estimateNameInputField}
+                                {estimateCostInputField}
                             </Form.Row>
                         </Card.Body>
                         <Card.Footer style={{"textAlign": "right"}}>

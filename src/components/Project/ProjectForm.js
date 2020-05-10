@@ -20,7 +20,7 @@ export default class ProjectForm extends Component {
     };
 
     componentDidMount() {
-        const projectId = +this.props.match.params.id;
+        const projectId = this.props.match.params.id;
         if (projectId) {
             this.findProjectById(projectId);
         }
@@ -93,7 +93,7 @@ export default class ProjectForm extends Component {
             projectOwner, show
         } = this.state;
 
-        const projectContractField =
+        const projectContractInputField =
             <Form.Group as={Col} controlId="formGridProjectContract">
                 <Form.Label>Договор</Form.Label>
                 <Form.Control required autoComplete="off"
@@ -101,7 +101,7 @@ export default class ProjectForm extends Component {
                               value={projectContract} onChange={this.projectChange}
                               placeholder="Введите номер договора"/>
             </Form.Group>
-        const projectNameField =
+        const projectNameInputField =
             <Form.Group as={Col} controlId="formGridProjectName">
                 <Form.Label>Название проекта</Form.Label>
                 <Form.Control required autoComplete="off"
@@ -109,7 +109,7 @@ export default class ProjectForm extends Component {
                               value={projectName} onChange={this.projectChange}
                               placeholder="Введите название проекта"/>
             </Form.Group>
-        const projectAddressField =
+        const projectAddressInputField =
             <Form.Group as={Col} controlId="formGridProjectAddress">
                 <Form.Label>Адрес объекта</Form.Label>
                 <Form.Control required autoComplete="off"
@@ -117,7 +117,7 @@ export default class ProjectForm extends Component {
                               value={projectAddress} onChange={this.projectChange}
                               placeholder="Введите адрес объекта"/>
             </Form.Group>
-        const projectCreationDateField =
+        const projectCreationDateInputField =
             <Form.Group as={Col} controlId="formGridProjectCreationDate">
                 <Form.Label>Дата создания договора</Form.Label>
                 <Form.Control required autoComplete="off"
@@ -125,7 +125,7 @@ export default class ProjectForm extends Component {
                               value={projectCreationDate} onChange={this.projectChange}
                               placeholder="Введите дату создания договора"/>
             </Form.Group>
-        const projectOwnerField =
+        const projectOwnerInputField =
             <Form.Group as={Col} controlId="formGridProjectOwner">
                 <Form.Label>Заказчик</Form.Label>
                 <Form.Control required autoComplete="off"
@@ -133,7 +133,7 @@ export default class ProjectForm extends Component {
                               value={projectOwner} onChange={this.projectChange}
                               placeholder="Введите Ф.И.О. заказчика"/>
             </Form.Group>
-        const projectDescriptionField =
+        const projectDescriptionInputField =
             <Form.Group as={Col} controlId="formGridProjectDescription">
                 <Form.Label>Описание</Form.Label>
                 <Form.Control required autoComplete="off"
@@ -153,18 +153,18 @@ export default class ProjectForm extends Component {
                     <Form onSubmit={this.submitProject} id="projectFormId">
                         <Card.Body>
                             <Form.Row>
-                                {projectContractField}
-                                {projectNameField}
+                                {projectContractInputField}
+                                {projectNameInputField}
                             </Form.Row>
                             <Form.Row>
-                                {projectAddressField}
-                                {projectCreationDateField}
+                                {projectAddressInputField}
+                                {projectCreationDateInputField}
                             </Form.Row>
                             <Form.Row>
-                                {projectOwnerField}
+                                {projectOwnerInputField}
                             </Form.Row>
                             <Form.Row>
-                                {projectDescriptionField}
+                                {projectDescriptionInputField}
                             </Form.Row>
                         </Card.Body>
                         <Card.Footer style={{"textAlign": "right"}}>

@@ -81,7 +81,7 @@ export default class MarkUpForm extends Component {
     render() {
         const {show, markUpName, markUpPercent} = this.state;
 
-        const markUpPercentField =
+        const markUpPercentInputField =
             <Form.Control required autoComplete="off"
                           type="text" name="markUpPercent"
                           value={markUpPercent} onChange={this.markUpChange}/>
@@ -101,7 +101,7 @@ export default class MarkUpForm extends Component {
                                         {markUpName}
                                     </Form.Label>
                                     <Col sm="3">
-                                        {markUpPercentField}
+                                        {markUpPercentInputField}
                                     </Col>
                                 </Form.Group>
                             </Form.Row>

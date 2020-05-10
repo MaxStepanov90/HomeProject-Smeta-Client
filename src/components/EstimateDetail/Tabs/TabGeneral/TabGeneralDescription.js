@@ -24,20 +24,22 @@ export default function TabGeneralDescription({
                     <TabDescriptionColumn title={"Себестоимость"}
                                           dataOfWorks={sumOfWorks}
                                           dataOfMaterials={sumOfMaterials}
-                                          dataOfAll={sumOfWorks + sumOfMaterials}
+                                          dataOfAll={Math.round((sumOfWorks + sumOfMaterials)*100)/100}
                     />
                     <TabDescriptionColumn title={"Наценка"}
                                           dataOfWorks={sumOfMarkUpFromWorks}
                                           dataOfMaterials={sumOfMarkUpFromMaterials}
-                                          dataOfAll={sumOfMarkUpFromWorks + sumOfMarkUpFromMaterials}
+                                          dataOfAll={Math.round(
+                                              (sumOfMarkUpFromWorks + sumOfMarkUpFromMaterials)*100)/100}
                     />
                     <TabDescriptionColumn title={"для Клиента"}
                                           dataOfWorks={sumOfWorksWithMarkUp}
                                           dataOfMaterials={sumOfMaterialsWithMarkUp}
-                                          dataOfAll={sumOfWorksWithMarkUp + sumOfMaterialsWithMarkUp}
+                                          dataOfAll={Math.round(
+                                              (sumOfWorksWithMarkUp + sumOfMaterialsWithMarkUp)*100)/100}
                     />
                     <div className="col align-self-center">
-                        <h1>{sumOfWorksWithMarkUp + sumOfMaterialsWithMarkUp}</h1>
+                        <h1>{Math.round((sumOfWorksWithMarkUp + sumOfMaterialsWithMarkUp)*100)/100}</h1>
                     </div>
                 </div>
             </div>

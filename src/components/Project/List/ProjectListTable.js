@@ -55,8 +55,8 @@ export default function ProjectListTable({projects, onSortData, sortToggle, onDe
     )
 }
 ProjectListTable.propTypes = {
-    projects: PropTypes.string.isRequired,
-    sortToggle: PropTypes.number.isRequired,
+    projects: PropTypes.array.isRequired,
+    sortToggle: PropTypes.bool.isRequired,
     onSortData: PropTypes.func.isRequired,
     onDeleteProject: PropTypes.func.isRequired,
 }

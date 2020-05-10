@@ -66,7 +66,7 @@ export default class EstimateDetailForm extends Component {
     render() {
         const {name, unit, quantity, price, estimateId, category, show} = this.state;
 
-        const estimateDetailNameField =
+        const estimateDetailNameInputField =
             <Form.Group as={Col} controlId="formGridName">
                 <Form.Label>Наименование позиции</Form.Label>
                 <Form.Control required autoComplete="off"
@@ -75,7 +75,7 @@ export default class EstimateDetailForm extends Component {
                               placeholder="Введите наименование позиции"/>
             </Form.Group>
 
-        const estimateDetailUnitField =
+        const estimateDetailUnitInputField =
             <Form.Group as={Col} controlId="formGridUnit">
                 <Form.Label>Ед.изм.</Form.Label>
                 <Form.Control required autoComplete="off"
@@ -84,7 +84,7 @@ export default class EstimateDetailForm extends Component {
                               placeholder="Введите ед.изм."/>
             </Form.Group>
 
-        const estimateDetailQuantityField =
+        const estimateDetailQuantityInputField =
             <Form.Group as={Col} controlId="formGridQuantity">
                 <Form.Label>Количество</Form.Label>
                 <Form.Control required autoComplete="off"
@@ -93,7 +93,7 @@ export default class EstimateDetailForm extends Component {
                               placeholder="Введите количество"/>
             </Form.Group>
 
-        const estimateDetailPriceField =
+        const estimateDetailPriceInputField =
             <Form.Group as={Col} controlId="formGridPrice">
                 <Form.Label>Цена</Form.Label>
                 <Form.Control required autoComplete="off"
@@ -102,7 +102,7 @@ export default class EstimateDetailForm extends Component {
                               placeholder="Введите цену"/>
             </Form.Group>
 
-        const estimateDetailCategory =
+        const estimateDetailCategoryInputField =
             <Form.Group as={Col} controlId="formGridCategory">
                 <Form.Label>Категория</Form.Label>
                 <Form.Control required as="select"
@@ -124,13 +124,13 @@ export default class EstimateDetailForm extends Component {
                     <Form onSubmit={this.submitEstimateDetail} id="estimateDetailFormId">
                         <Card.Body>
                             <Form.Row>
-                                {estimateDetailNameField}
+                                {estimateDetailNameInputField}
                             </Form.Row>
                             <Form.Row>
-                                {estimateDetailUnitField}
-                                {estimateDetailQuantityField}
-                                {estimateDetailPriceField}
-                                {estimateDetailCategory}
+                                {estimateDetailUnitInputField}
+                                {estimateDetailQuantityInputField}
+                                {estimateDetailPriceInputField}
+                                {estimateDetailCategoryInputField}
                             </Form.Row>
                         </Card.Body>
                         <Card.Footer style={{"textAlign": "right"}}>

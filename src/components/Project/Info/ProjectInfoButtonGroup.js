@@ -22,5 +22,5 @@ export default function ProjectInfoButtonGroup({projectId}) {
     )
 }
 ProjectInfoButtonGroup.propTypes={
-    projectId: PropTypes.number.isRequired,
+    projectId: PropTypes.number,
 }

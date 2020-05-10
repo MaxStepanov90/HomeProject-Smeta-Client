@@ -33,7 +33,7 @@ export default function ProjectListHeader({search, currentPage, onSearchChange, 
     )
 }
 ProjectListHeader.propTypes={
-    search: PropTypes.string.isRequired,
+    search: PropTypes.string,
     currentPage: PropTypes.number.isRequired,
     onSearchChange: PropTypes.func.isRequired,
     onSearchData: PropTypes.func.isRequired,

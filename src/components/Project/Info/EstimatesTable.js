@@ -61,7 +61,7 @@ export default function EstimatesTable ({estimates, estimateName, projectId, onD
 }
 EstimatesTable.propTypes={
     estimateName: PropTypes.string.isRequired,
-    projectId: PropTypes.number.isRequired,
+    projectId: PropTypes.number,
     estimates: PropTypes.array.isRequired,
     onDeleteEstimate: PropTypes.func.isRequired
 }

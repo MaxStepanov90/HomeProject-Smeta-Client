@@ -22,13 +22,13 @@ export default function TabDescriptionColumn({title, dataOfWorks, dataOfMaterial
 }
 TabDescriptionColumn.propTypes={
     title: PropTypes.string.isRequired,
-    dataOfWorks: PropTypes.number.isRequired,
-    dataOfMaterials: PropTypes.number.isRequired,
-    dataOfAll: PropTypes.number.isRequired
+    dataOfWorks: PropTypes.any.isRequired,
+    dataOfMaterials: PropTypes.any.isRequired,
+    dataOfAll: PropTypes.any.isRequired
 }
 TabDescriptionColumn.defaultProps = {
     title: 'Без названия',
-    dataOfWorks: 0,
-    dataOfMaterials: 0,
-    dataOfAll: 0
+    dataOfWorks: '-',
+    dataOfMaterials: '-',
+    dataOfAll: '-'
 };

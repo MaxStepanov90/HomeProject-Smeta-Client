@@ -4,6 +4,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlusSquare} from "@fortawesome/free-solid-svg-icons";
 import TabClientDescription from "./TabClientDescription";
 import TabClientTable from "./TabClientTable";
+import * as PropTypes from "prop-types";
 
 export default function TabClient({
                                       estimateName, sumOfWorksWithMarkUp, sumOfMaterialsWithMarkUp,
@@ -30,4 +31,17 @@ export default function TabClient({
         </Fragment>
 
     )
+}
+TabClient.propTypes={
+    estimateName: PropTypes.string.isRequired,
+    estimateDetails: PropTypes.array.isRequired,
+    sumOfWorksWithMarkUp: PropTypes.number.isRequired,
+    sumOfMaterialsWithMarkUp: PropTypes.number.isRequired,
+    estimateId: PropTypes.any.isRequired
+}
+TabClient.defaultProps = {
+    estimateName: 'Без названия',
+    sumOfWorksWithMarkUp: 0,
+    sumOfMaterialsWithMarkUp: 0,
+    estimateId: 0
 }

@@ -37,7 +37,7 @@ export default function ProjectInfoDescription({
         </div>
     )
 }
-ProjectInfoDescription.propTypes={
+ProjectInfoDescription.propTypes = {
     projectName: PropTypes.string.isRequired,
     projectAddress: PropTypes.string.isRequired,
     projectContract: PropTypes.string.isRequired,

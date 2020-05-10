@@ -1,6 +1,7 @@
 import React, {Fragment} from "react";
 import TabDescription from "../../Generic/TabDescription";
 import TabCategoryTable from "../../Generic/TabCategoryTable";
+import * as PropTypes from "prop-types";
 
 export default function TabWorks({
                                      estimateName, estimateDetailsWork, onChange, valueAll,
@@ -25,3 +26,18 @@ export default function TabWorks({
 
     )
 }
+TabWorks.propTypes={
+    estimateName: PropTypes.string.isRequired,
+    estimateDetailsWork: PropTypes.array.isRequired,
+    valueAll: PropTypes.number.isRequired,
+    valueDone: PropTypes.number.isRequired,
+    valueTo: PropTypes.number.isRequired,
+    percent: PropTypes.number.isRequired,
+}
+TabWorks.defaultProps = {
+    estimateName: 'Без названия',
+    valueAll: 0,
+    valueDone: 0,
+    valueTo: 0,
+    percent: 0,
+};
