@@ -12,8 +12,11 @@ export default class EstimateDetailsTabs extends Component {
         this.state = {
             estimateId: this.props.match.params.id,
             estimateDetails: [],
+            payments: [],
             estimateDetailsWork: [],
             estimateDetailsMaterial: [],
+            paymentsWork: [],
+            paymentsMaterial: [],
             activeTab: 1,
             complete: false,
         };
@@ -25,6 +28,7 @@ export default class EstimateDetailsTabs extends Component {
         if (estimateId) {
             this.findEstimateById(estimateId);
             this.findAllEstimateDetails(estimateId);
+            this.findAllPayments(estimateId);
         }
     }
 
@@ -35,9 +39,10 @@ export default class EstimateDetailsTabs extends Component {
                 if (estimate) {
                     this.setState({
                         estimateId: estimate.id,
-                        estimateName: estimate.estimateName
+                        estimateName: estimate.estimateName,
                     })
                 }
+                console.log(estimate)
             }).catch((error) => {
             console.error('Error' + error)
         });
@@ -53,6 +58,20 @@ export default class EstimateDetailsTabs extends Component {
                 this.setState({
                     estimateDetailsWork: this.filterToEstimateDetailsWork(this.state.estimateDetails),
                     estimateDetailsMaterial: this.filterToEstimateDetailsMaterial(this.state.estimateDetails)
+                })
+            });
+    }
+
+    findAllPayments(estimateId) {
+        fetch("http://localhost:8080/remsmet/payments/estimateId/" + estimateId)
+            .then(response => response.json())
+            .then((data) => {
+                this.setState({
+                    payments: data
+                })
+                this.setState({
+                    paymentsWork: this.state.payments.filter(payment => payment.category === 'работы'),
+                   paymentsMaterial: this.state.payments.filter(payment => payment.category === 'материалы')
                 })
             });
     }
@@ -101,13 +120,21 @@ export default class EstimateDetailsTabs extends Component {
         return estimateDetails.filter(estimateDetail => estimateDetail.category === 'материалы')
     }
 
+    calcPaymentsByCategory = (array) => {
+        let sum = 0;
+        for (let i = 0; i < array.length; i++) {
+            sum += array[i].amount;
+        }
+        return sum
+    }
+
     calcEstimateDetailsByCategory = (array) => {
         let sum = 0;
         for (let i = 0; i < array.length; i++) {
             sum += array[i].cost;
         }
         return sum
-    };
+    }
 
     calcEstimateDetailsByCategoryWithMarkUp = (array) => {
         let sum = 0;
@@ -184,7 +211,7 @@ export default class EstimateDetailsTabs extends Component {
     render() {
         const {
             estimateDetails, estimateName, estimateId, estimateDetailsMaterial, estimateDetailsWork, show,
-            activeTab
+            activeTab, paymentsWork, paymentsMaterial
         } = this.state;
 
         const sumOfWorks = this.calcEstimateDetailsByCategory(estimateDetailsWork);
@@ -202,6 +229,8 @@ export default class EstimateDetailsTabs extends Component {
             sumOfWorksComplete, sumOfWorksWithMarkUp);
         const percentOfMaterialsComplete = this.calcPercentOfEstimateDetailsByCategoryComplete(
             sumOfMaterialsComplete, sumOfMaterialsWithMarkUp);
+        const sumOfPaymentsWork = this.calcPaymentsByCategory(paymentsWork)
+        const sumOfPaymentsMaterial = this.calcPaymentsByCategory(paymentsMaterial)
 
         return (
             <Fragment>
@@ -229,7 +258,7 @@ export default class EstimateDetailsTabs extends Component {
                                       percent={percentOfWorksComplete}
                                       valueAll={sumOfWorksWithMarkUp}
                                       valueDone={sumOfWorksComplete}
-                                      valueTo={sumOfWorksWithMarkUp - sumOfWorksComplete}
+                                      valuePay={sumOfPaymentsWork}
                             />
                         </Tab>
                         <Tab eventKey={3} title="Смета закупок">
@@ -239,7 +268,7 @@ export default class EstimateDetailsTabs extends Component {
                                           percent={percentOfMaterialsComplete}
                                           valueAll={sumOfMaterialsWithMarkUp}
                                           valueDone={sumOfMaterialsComplete}
-                                          valueTo={sumOfMaterialsWithMarkUp - sumOfMaterialsComplete}
+                                          valuePay={sumOfPaymentsMaterial}
                             />
                         </Tab>
                         <Tab eventKey={4} title="Смета клиента">

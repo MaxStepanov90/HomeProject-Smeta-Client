@@ -3,7 +3,7 @@ import DescriptionRaw from "./DescrpirtionRaw";
 import ProgressBarComplete from "./ProgressBarComplete";
 import * as PropTypes from "prop-types";
 
-export default function TabDescription({estimateName, valueAll, valueDone, valueTo, percent}) {
+export default function TabDescription({estimateName, valueAll, valueDone, valuePay, percent}) {
 
     return(
         <div className="row justify-content-between my-4">
@@ -14,7 +14,7 @@ export default function TabDescription({estimateName, valueAll, valueDone, value
                 <ProgressBarComplete
                     valueAll={valueAll}
                     valueDone={valueDone}
-                    valueTo={valueTo}
+                    valuePay={valuePay}
                     percent={percent}
                 />
             </div>

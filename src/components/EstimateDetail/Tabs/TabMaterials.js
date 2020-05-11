@@ -5,7 +5,7 @@ import * as PropTypes from "prop-types";
 
 export default function TabMaterials({
                                          estimateName, estimateId, estimateDetailsMaterial, onChange,
-                                         valueAll, valueDone, valueTo, percent
+                                         valueAll, valueDone, valuePay, percent
                                      }) {
     return (
         <Fragment>
@@ -13,7 +13,7 @@ export default function TabMaterials({
                 <TabDescription estimateName={estimateName}
                                 valueAll={valueAll}
                                 valueDone={valueDone}
-                                valueTo={valueTo}
+                                valuePay={valuePay}
                                 percent={percent}
                 />
                 <div className="container-fluid">

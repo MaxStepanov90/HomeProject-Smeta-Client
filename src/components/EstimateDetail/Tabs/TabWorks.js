@@ -5,7 +5,7 @@ import * as PropTypes from "prop-types";
 
 export default function TabWorks({
                                      estimateName, estimateDetailsWork, onChange, valueAll,
-                                     valueDone, valueTo, percent
+                                     valueDone, percent, valuePay
                                  }) {
     return (
         <Fragment>
@@ -13,7 +13,7 @@ export default function TabWorks({
                 <TabDescription estimateName={estimateName}
                                 valueAll={valueAll}
                                 valueDone={valueDone}
-                                valueTo={valueTo}
+                                valuePay={valuePay}
                                 percent={percent}
                 />
                 <div className="container-fluid">

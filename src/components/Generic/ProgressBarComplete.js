@@ -2,7 +2,7 @@ import React from "react";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import * as PropTypes from "prop-types";
 
-export default function ProgressBarComplete({valueAll, valueDone, valueTo, percent}) {
+export default function ProgressBarComplete({valueAll, valueDone, valuePay, percent}) {
 
     return (
         <div className="row">
@@ -23,8 +23,12 @@ export default function ProgressBarComplete({valueAll, valueDone, valueTo, perce
                         <div className="col my-2">{valueDone}</div>
                     </div>
                     <div className="col">
-                        <div className="col my-2">Осталось</div>
-                        <div className="col my-2">{valueTo}</div>
+                        <div className="col my-2">Оплачено</div>
+                        <div className="col my-2">{valuePay}</div>
+                    </div>
+                    <div className="col">
+                        <div className="col my-2">К Оплате</div>
+                        <div className="col my-2">{valueDone - valuePay}</div>
                     </div>
                 </div>
             </div>

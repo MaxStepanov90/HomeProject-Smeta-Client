@@ -18,10 +18,10 @@ export default function TabClient({
                                       sumOfMaterialsWithMarkUp={sumOfMaterialsWithMarkUp}
                 />
                 <div className="container-fluid mb-2">
-                    <Link to={{pathname: "/addEstimateDetail", estimateId: estimateId}}
-                          className="btn btn-sm btn-success">
+                    <Link to={{pathname: "/addPayment", estimateId: estimateId}}
+                          className="btn btn-sm btn-info">
                         <FontAwesomeIcon icon={faPlusSquare}/>&nbsp;
-                        Добавить позицию
+                        Добавить платеж
                     </Link>
                 </div>
                 <div className="container-fluid">

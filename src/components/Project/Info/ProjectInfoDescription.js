@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import ProjectInfoProgressBar from "./ProjectInfoProgressBar";
 import * as PropTypes from "prop-types";
 import DescriptionRaw from "../../Generic/DescrpirtionRaw";
+import {Container} from "react-bootstrap";
 
 export default function ProjectInfoDescription({
                                                    projectName, projectAddress, projectContract, projectDescription,
@@ -12,27 +13,31 @@ export default function ProjectInfoDescription({
     return (
         <div className="row justify-content-between">
             <div className="col-5">
-                <div className="row">
-                    <div className="col">
-                        <h5>Информация о проектe</h5>
+                <Container>
+                    <div className="row">
+                        <div className="col">
+                            <h5>Информация о проектe</h5>
+                        </div>
                     </div>
-                </div>
-                <DescriptionRaw title={"Название"} value={projectName}/>
-                <DescriptionRaw title={"Адрес"} value={projectAddress}/>
-                <DescriptionRaw title={"Договор"} value={projectContract}/>
-                <DescriptionRaw title={"Описание"} value={projectDescription}/>
-                <DescriptionRaw title={"Клиент"} value={projectOwner}/>
+                    <DescriptionRaw title={"Название"} value={projectName}/>
+                    <DescriptionRaw title={"Адрес"} value={projectAddress}/>
+                    <DescriptionRaw title={"Договор"} value={projectContract}/>
+                    <DescriptionRaw title={"Заказчик"} value={projectOwner}/>
+                    <DescriptionRaw title={"Описание"} value={projectDescription}/>
+                </Container>
             </div>
             <div className="col-7">
+                <Container>
                 <DescriptionRaw title={"Всего смет в работе"} value={estimates.length}/>
                 <DescriptionRaw title={"Общая сумма"} value={sumAllEstimateCost}/>
+                <Link onClick={onChangeVisible}>{buttonText}</Link>
                 {visible ? estimates.map((estimate) => (
                     <ProjectInfoProgressBar key={estimate.id}
                                             name={estimate.estimateName}
                                             value={estimate.estimateCost}
                                             complete={onPercentageEstimateDone(estimate)}/>
                 )) : null}
-                <Link onClick={onChangeVisible}>{buttonText}</Link>
+                </Container>
             </div>
         </div>
     )

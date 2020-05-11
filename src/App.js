@@ -16,6 +16,7 @@ import EstimateDetailForm from "./components/EstimateDetail/EstimateDetailForm";
 import MarkUpList from "./components/MarkUp/List/MarkUpList";
 import MarkUpForm from "./components/MarkUp/MarkUpForm";
 import EstimateForm from "./components/Estimate/EstimateForm";
+import PaymentForm from "./components/Payment/PaymentForm";
 
 function App() {
     return (
@@ -29,12 +30,13 @@ function App() {
                             <Route path="/addProject" component={ProjectForm}/>
                             <Route path="/addEstimate" component={EstimateForm}/>
                             <Route path="/addEstimateDetail" component={EstimateDetailForm}/>
+                            <Route path="/addPayment" component={PaymentForm}/>
                             <Route path="/projects" component={ProjectList}/>
+                            <Route path="/payments" component={PaymentList}/>
                             <Route path="/markUps" component={MarkUpList}/>
                             <Route path="/projectInfo/:id" component={ProjectInfo}/>
                             <Route path="/estimate/:id" component={EstimateDetailsTabs}/>
                             <Route path="/markUp/:id" component={MarkUpForm}/>
-                            <Route path="/paymentProject" component={PaymentList}/>
                         </Switch>
                     </Col>
                 </Row>

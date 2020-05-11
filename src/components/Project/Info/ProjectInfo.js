@@ -80,7 +80,7 @@ export default class ProjectInfo extends Component {
     };
 
     percentageEstimateDone = (estimate) => {
-        return Math.ceil(estimate.estimatePayment / (estimate.estimateCost / 100));
+        return Math.ceil(estimate.estimatePerformance / (estimate.estimateCost / 100));
     };
 
     onChangeVisible = () => {
