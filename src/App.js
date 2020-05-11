@@ -37,6 +37,7 @@ function App() {
                             <Route path="/projectInfo/:id" component={ProjectInfo}/>
                             <Route path="/estimate/:id" component={EstimateDetailsTabs}/>
                             <Route path="/markUp/:id" component={MarkUpForm}/>
+                            <Route path="/paymentList" component={PaymentList}/>
                         </Switch>
                     </Col>
                 </Row>

@@ -71,7 +71,7 @@ export default class PaymentForm extends Component {
                 <Form.Control required autoComplete="off"
                               type="test" name="amount"
                               value={amount} onChange={this.paymentChange}
-                              placeholder="Введите сумму"/>
+                              placeholder="150000.0"/>
             </Form.Group>
 
         const сategoryInputField =
@@ -93,7 +93,7 @@ export default class PaymentForm extends Component {
                               as="textarea" rows="3"
                               type="test" name="comment"
                               value={comment} onChange={this.paymentChange}
-                              placeholder="введите комментарий"/>
+                              placeholder="аванс за черновые работы"/>
             </Form.Group>
 
         return (

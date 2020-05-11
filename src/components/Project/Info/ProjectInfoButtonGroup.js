@@ -13,7 +13,7 @@ export default function ProjectInfoButtonGroup({projectId}) {
                 <FontAwesomeIcon icon={faPlusSquare}/>&nbsp;
                 Новая смета
             </Link>
-            <Link to={{pathname: "/paymentProject", projectId: projectId}}
+            <Link to={{pathname: "/paymentList", projectId: projectId}}
                   className="btn btn-sm btn-info">
                 <FontAwesomeIcon icon={faInfo}/>&nbsp;
                 Платежи

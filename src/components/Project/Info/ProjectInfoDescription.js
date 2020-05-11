@@ -28,15 +28,19 @@ export default function ProjectInfoDescription({
             </div>
             <div className="col-7">
                 <Container>
-                <DescriptionRaw title={"Всего смет в работе"} value={estimates.length}/>
-                <DescriptionRaw title={"Общая сумма"} value={sumAllEstimateCost}/>
-                <Link onClick={onChangeVisible}>{buttonText}</Link>
-                {visible ? estimates.map((estimate) => (
-                    <ProjectInfoProgressBar key={estimate.id}
-                                            name={estimate.estimateName}
-                                            value={estimate.estimateCost}
-                                            complete={onPercentageEstimateDone(estimate)}/>
-                )) : null}
+                    {estimates.length !== 0 ?
+                        <div>
+                            <DescriptionRaw title={"Всего смет в работе"} value={estimates.length}/>
+                            <DescriptionRaw title={"Общая сумма"} value={sumAllEstimateCost}/>
+                            <Link onClick={onChangeVisible}>{buttonText}</Link>
+                        </div>
+                        : null}
+                    {visible ? estimates.map((estimate) => (
+                        <ProjectInfoProgressBar key={estimate.id}
+                                                name={estimate.estimateName}
+                                                value={estimate.estimateCost}
+                                                complete={onPercentageEstimateDone(estimate)}/>
+                    )) : null}
                 </Container>
             </div>
         </div>

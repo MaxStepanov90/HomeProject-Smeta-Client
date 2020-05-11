@@ -72,7 +72,7 @@ export default class EstimateDetailForm extends Component {
                 <Form.Control required autoComplete="off"
                               type="test" name="name"
                               value={name} onChange={this.estimateDetailChange}
-                              placeholder="Введите наименование позиции"/>
+                              placeholder="Штукатурка стен"/>
             </Form.Group>
 
         const estimateDetailUnitInputField =
@@ -81,7 +81,7 @@ export default class EstimateDetailForm extends Component {
                 <Form.Control required autoComplete="off"
                               type="test" name="unit"
                               value={unit} onChange={this.estimateDetailChange}
-                              placeholder="Введите ед.изм."/>
+                              placeholder="м2"/>
             </Form.Group>
 
         const estimateDetailQuantityInputField =
@@ -90,7 +90,7 @@ export default class EstimateDetailForm extends Component {
                 <Form.Control required autoComplete="off"
                               type="test" name="quantity"
                               value={quantity} onChange={this.estimateDetailChange}
-                              placeholder="Введите количество"/>
+                              placeholder="50"/>
             </Form.Group>
 
         const estimateDetailPriceInputField =
@@ -99,7 +99,7 @@ export default class EstimateDetailForm extends Component {
                 <Form.Control required autoComplete="off"
                               type="test" name="price"
                               value={price} onChange={this.estimateDetailChange}
-                              placeholder="Введите цену"/>
+                              placeholder="200"/>
             </Form.Group>
 
         const estimateDetailCategoryInputField =

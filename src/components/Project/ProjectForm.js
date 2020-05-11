@@ -99,7 +99,7 @@ export default class ProjectForm extends Component {
                 <Form.Control required autoComplete="off"
                               type="test" name="projectContract"
                               value={projectContract} onChange={this.projectChange}
-                              placeholder="Введите номер договора"/>
+                              placeholder="№7"/>
             </Form.Group>
         const projectNameInputField =
             <Form.Group as={Col} controlId="formGridProjectName">
@@ -107,7 +107,7 @@ export default class ProjectForm extends Component {
                 <Form.Control required autoComplete="off"
                               type="test" name="projectName"
                               value={projectName} onChange={this.projectChange}
-                              placeholder="Введите название проекта"/>
+                              placeholder="ЖК Соколовский"/>
             </Form.Group>
         const projectAddressInputField =
             <Form.Group as={Col} controlId="formGridProjectAddress">
@@ -115,7 +115,7 @@ export default class ProjectForm extends Component {
                 <Form.Control required autoComplete="off"
                               type="test" name="projectAddress"
                               value={projectAddress} onChange={this.projectChange}
-                              placeholder="Введите адрес объекта"/>
+                              placeholder="ул Славяновская д15 кв237"/>
             </Form.Group>
         const projectCreationDateInputField =
             <Form.Group as={Col} controlId="formGridProjectCreationDate">
@@ -123,7 +123,7 @@ export default class ProjectForm extends Component {
                 <Form.Control required autoComplete="off"
                               type="test" name="projectCreationDate"
                               value={projectCreationDate} onChange={this.projectChange}
-                              placeholder="Введите дату создания договора"/>
+                              placeholder="2015-05-03"/>
             </Form.Group>
         const projectOwnerInputField =
             <Form.Group as={Col} controlId="formGridProjectOwner">
@@ -131,7 +131,7 @@ export default class ProjectForm extends Component {
                 <Form.Control required autoComplete="off"
                               type="test" name="projectOwner"
                               value={projectOwner} onChange={this.projectChange}
-                              placeholder="Введите Ф.И.О. заказчика"/>
+                              placeholder="Сершов Владилен Дмитриевич"/>
             </Form.Group>
         const projectDescriptionInputField =
             <Form.Group as={Col} controlId="formGridProjectDescription">
@@ -140,7 +140,7 @@ export default class ProjectForm extends Component {
                               as="textarea" rows="3"
                               type="test" name="projectDescription"
                               value={projectDescription} onChange={this.projectChange}
-                              placeholder="Введите описание проекта"/>
+                              placeholder="Ремонт квартиры под ключ 40м2"/>
             </Form.Group>
 
         return (
