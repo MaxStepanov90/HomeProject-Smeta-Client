@@ -24,7 +24,7 @@ export default function TabGeneral({
                 />
                 <div className="container-fluid mb-2">
                     <Link to={{pathname: "/addEstimateDetail", estimateId: estimateId}}
-                          className="btn btn-sm btn-success">
+                          className="btn btn-sm btn-primary">
                         <FontAwesomeIcon icon={faPlusSquare}/>&nbsp;
                         Добавить позицию
                     </Link>

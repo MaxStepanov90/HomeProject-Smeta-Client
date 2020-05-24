@@ -42,7 +42,6 @@ export default class EstimateDetailsTabs extends Component {
                         estimateName: estimate.estimateName,
                     })
                 }
-                console.log(estimate)
             }).catch((error) => {
             console.error('Error' + error)
         });
@@ -71,7 +70,7 @@ export default class EstimateDetailsTabs extends Component {
                 })
                 this.setState({
                     paymentsWork: this.state.payments.filter(payment => payment.category === 'работы'),
-                   paymentsMaterial: this.state.payments.filter(payment => payment.category === 'материалы')
+                    paymentsMaterial: this.state.payments.filter(payment => payment.category === 'материалы')
                 })
             });
     }
@@ -110,6 +109,22 @@ export default class EstimateDetailsTabs extends Component {
             headers
         })
             .then(response => response.json())
+    };
+
+    downloadExcelByCategory = (category) => {
+        fetch("http://localhost:8080/remsmet/download/excel/estimateId/"
+            + this.state.estimateId + "/category/" + category, {
+            method: 'GET'
+        }).then(response => {
+            const filename = response.headers.get('Content-Disposition').split('filename=')[1];
+            response.blob().then(blob => {
+                let url = window.URL.createObjectURL(blob);
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+            });
+        })
     };
 
     filterToEstimateDetailsWork = (estimateDetails) => {
@@ -234,7 +249,7 @@ export default class EstimateDetailsTabs extends Component {
 
         return (
             <Fragment>
-                    <MyToast show={show} message={"Позиция удалена."} type={"danger"}/>
+                <MyToast show={show} message={"Позиция удалена."} type={"danger"}/>
                 <div className="border border-dark bg-white m-3">
                     <Tabs activeKey={activeTab} defaultActiveKey={0} onSelect={this.handleSelect}>
                         <Tab eventKey={1} title="Общая смета">
@@ -255,6 +270,7 @@ export default class EstimateDetailsTabs extends Component {
                             <TabWorks estimateName={estimateName}
                                       estimateDetailsWork={estimateDetailsWork}
                                       onChange={this.toggleCompleteWork}
+                                      onDownloadExcel={this.downloadExcelByCategory}
                                       percent={percentOfWorksComplete}
                                       valueAll={sumOfWorksWithMarkUp}
                                       valueDone={sumOfWorksComplete}
@@ -265,6 +281,7 @@ export default class EstimateDetailsTabs extends Component {
                             <TabMaterials estimateName={estimateName}
                                           estimateDetailsMaterial={estimateDetailsMaterial}
                                           onChange={this.toggleCompleteMaterial}
+                                          onDownloadExcel={this.downloadExcelByCategory}
                                           percent={percentOfMaterialsComplete}
                                           valueAll={sumOfMaterialsWithMarkUp}
                                           valueDone={sumOfMaterialsComplete}

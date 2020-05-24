@@ -19,9 +19,9 @@ export default function TabClient({
                 />
                 <div className="container-fluid mb-2">
                     <Link to={{pathname: "/addPayment", estimateId: estimateId}}
-                          className="btn btn-sm btn-info">
+                          size={"sm"} className="btn btn-sm btn-primary">
                         <FontAwesomeIcon icon={faPlusSquare}/>&nbsp;
-                        Добавить платеж
+                        Оплатить
                     </Link>
                 </div>
                 <div className="container-fluid">

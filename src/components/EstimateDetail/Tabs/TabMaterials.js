@@ -2,9 +2,12 @@ import React, {Fragment} from "react";
 import TabDescription from "../../Generic/TabDescription";
 import TabCategoryTable from "../../Generic/TabCategoryTable";
 import * as PropTypes from "prop-types";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faFileExcel} from "@fortawesome/free-solid-svg-icons";
+import {Button} from "react-bootstrap";
 
 export default function TabMaterials({
-                                         estimateName, estimateId, estimateDetailsMaterial, onChange,
+                                         estimateName, estimateId, estimateDetailsMaterial, onChange, onDownloadExcel,
                                          valueAll, valueDone, valuePay, percent
                                      }) {
     return (
@@ -16,6 +19,13 @@ export default function TabMaterials({
                                 valuePay={valuePay}
                                 percent={percent}
                 />
+                <div className="container-fluid mb-2">
+                    <Button size={"sm"} variant="primary"
+                            onClick={() => onDownloadExcel('материалы')}>
+                        <FontAwesomeIcon icon={faFileExcel}/>&nbsp;
+                        Экспорт в Excel
+                    </Button>
+                </div>
                 <div className="container-fluid">
                     <TabCategoryTable array={estimateDetailsMaterial}
                                       onChange={onChange}

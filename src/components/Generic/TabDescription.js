@@ -6,7 +6,7 @@ import * as PropTypes from "prop-types";
 export default function TabDescription({estimateName, valueAll, valueDone, valuePay, percent}) {
 
     return(
-        <div className="row justify-content-between my-4">
+        <div className="row justify-content-between">
             <div className="col-5">
                 <DescriptionRaw title={"Смета"} value={estimateName}/>
             </div>
