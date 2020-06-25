@@ -1,8 +1,8 @@
 import {Dispatch} from "react";
 import {Links} from "../../utils/Links";
 import {showAppMessage} from "./appActions";
-import {MessageText} from "../../utils/MessageText";
-import {MessageType} from "../../utils/MessageType";
+import {MyToastMessageText} from "../../utils/MyToastMessageText";
+import {MyToastMessageType} from "../../utils/MyToastMessageType";
 import {IEstimateDetail} from "../../interfaces/IEstimateDetail";
 import {DELETE_ESTIMATE_DETAIL, FIND_ALL_ESTIMATE_DETAILS} from "../actionTypes/estimateDetailActionTypes";
 
@@ -29,7 +29,7 @@ export function findAllEstimateDetails(estimateId: number) {
                     dispatch(findAllEstimateDetailsSuccess(estimateDetails))
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.ErrorRequestServer, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.ErrorRequestServer, MyToastMessageType.Error))
         }
     }
 }
@@ -39,10 +39,10 @@ export function deleteEstimateDetail(estimateDetailId: number) {
             await fetch(Links.DeleteEstimateDetail + estimateDetailId, {method: 'DELETE'})
                 .then(() => {
                     dispatch(deleteEstimateDetailSuccess(estimateDetailId))
-                    dispatch(showAppMessage(MessageText.SuccessDelete, MessageType.Success))
+                    dispatch(showAppMessage(MyToastMessageText.SuccessDelete, MyToastMessageType.Success))
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.SomeError, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.SomeError, MyToastMessageType.Error))
         }
     }
 }
@@ -64,7 +64,7 @@ export function updateEstimateDetail(estimateDetail: IEstimateDetail) {
                     }
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.SomeError, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.SomeError, MyToastMessageType.Error))
         }
     }
 }

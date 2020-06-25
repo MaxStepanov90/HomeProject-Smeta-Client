@@ -3,8 +3,8 @@ import {showAppMessage} from "./appActions";
 import {DELETE_MARK_UP, FIND_ALL_MARK_UPS, FIND_MARK_UP_BY_ID} from "../actionTypes/markUpActionTypes";
 import {Dispatch} from "react";
 import {Links} from "../../utils/Links";
-import {MessageType} from "../../utils/MessageType";
-import {MessageText} from "../../utils/MessageText";
+import {MyToastMessageType} from "../../utils/MyToastMessageType";
+import {MyToastMessageText} from "../../utils/MyToastMessageText";
 
 const findAllMarkUpsSuccess = (markUps: IMarkUp[]) => {
     return {
@@ -34,9 +34,10 @@ export function findAllMarkUps(): (dispatch: Dispatch<any>) => void {
                     dispatch(findAllMarkUpsSuccess(markUps))
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.ErrorRequestServer, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.ErrorRequestServer, MyToastMessageType.Error))
         }
     }
+
 }
 
 export function findMarkUpById(markUpId: number) {
@@ -48,7 +49,7 @@ export function findMarkUpById(markUpId: number) {
                     dispatch(findMarkUpByIdSuccess(markUp))
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.SomeError, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.SomeError, MyToastMessageType.Error))
         }
     }
 }
@@ -67,11 +68,11 @@ export function updateMarkUp(markUp: IMarkUp) {
                 .then(markUp => {
                     if (markUp) {
                         dispatch(findAllMarkUps())
-                        dispatch(showAppMessage(MessageText.SuccessPut, MessageType.Success))
+                        dispatch(showAppMessage(MyToastMessageText.SuccessPut, MyToastMessageType.Success))
                     }
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.SomeError, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.SomeError, MyToastMessageType.Error))
         }
     }
 }
@@ -82,11 +83,11 @@ export function deleteMarkUp(markUpId: number) {
             await fetch(Links.DeleteMarkUp + markUpId, {method: 'DELETE'})
                 .then(() => {
                     dispatch(deleteMarkUpSuccess(markUpId))
-                    dispatch(showAppMessage(MessageText.SuccessDelete, MessageType.Success))
+                    dispatch(showAppMessage(MyToastMessageText.SuccessDelete, MyToastMessageType.Success))
                 })
 
         } catch (e) {
-            dispatch(showAppMessage(MessageText.SomeError, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.SomeError, MyToastMessageType.Error))
         }
     }
 }

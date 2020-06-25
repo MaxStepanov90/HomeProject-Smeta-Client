@@ -1,4 +1,4 @@
-export enum MessageType {
+export enum MyToastMessageType {
     Error = "danger",
     Success = "success"
 }

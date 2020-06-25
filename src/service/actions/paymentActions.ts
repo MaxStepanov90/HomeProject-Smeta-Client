@@ -3,8 +3,8 @@ import {FIND_ALL_PAYMENTS_BY_ESTIMATE_ID, FIND_ALL_PAYMENTS_BY_PROJECT_ID} from 
 import {Dispatch} from "react";
 import {showAppMessage} from "./appActions";
 import {Links} from "../../utils/Links";
-import {MessageType} from "../../utils/MessageType";
-import {MessageText} from "../../utils/MessageText";
+import {MyToastMessageType} from "../../utils/MyToastMessageType";
+import {MyToastMessageText} from "../../utils/MyToastMessageText";
 
 const findAllPaymentsByProjectIdSuccess = (payments: IPayment[]) => {
     return {
@@ -28,7 +28,7 @@ export function findAllPaymentsByProjectId(projectId: number) {
                     dispatch(findAllPaymentsByProjectIdSuccess(payments))
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.ErrorRequestServer, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.ErrorRequestServer, MyToastMessageType.Error))
         }
     }
 }
@@ -41,7 +41,7 @@ export function findAllPaymentsByEstimateId(estimateId: number) {
                     dispatch(findAllPaymentsByEstimateIdSuccess(payments))
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.ErrorRequestServer, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.ErrorRequestServer, MyToastMessageType.Error))
         }
     }
 }

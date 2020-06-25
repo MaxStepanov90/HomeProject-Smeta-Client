@@ -2,8 +2,8 @@ import {IProject} from "../../interfaces/IProject";
 import {DELETE_PROJECT, FIND_ALL_PROJECTS, FIND_PROJECT_BY_ID} from "../actionTypes/projectActionTypes";
 import {Dispatch} from "react";
 import {showAppMessage} from "./appActions";
-import {MessageText} from "../../utils/MessageText";
-import {MessageType} from "../../utils/MessageType";
+import {MyToastMessageText} from "../../utils/MyToastMessageText";
+import {MyToastMessageType} from "../../utils/MyToastMessageType";
 import {Links} from "../../utils/Links";
 
 const findProjectByIdSuccess = (project: IProject) => {
@@ -37,7 +37,7 @@ export function findProjectById(projectId: number) {
                     }
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.ErrorRequestServer, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.ErrorRequestServer, MyToastMessageType.Error))
         }
     }
 }
@@ -51,7 +51,7 @@ export function findAllProjects() {
                     dispatch(findAllProjectsSuccess(projects))
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.ErrorRequestServer, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.ErrorRequestServer, MyToastMessageType.Error))
         }
     }
 }
@@ -62,10 +62,10 @@ export function deleteProject(projectId: number) {
             await fetch(Links.DeleteProject + "/" + projectId, {method: 'DELETE'})
                 .then(() => {
                     dispatch(deleteProjectSuccess(projectId))
-                    dispatch(showAppMessage(MessageText.SuccessDelete, MessageType.Success))
+                    dispatch(showAppMessage(MyToastMessageText.SuccessDelete, MyToastMessageType.Success))
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.SomeError, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.SomeError, MyToastMessageType.Error))
         }
     }
 }
@@ -84,11 +84,11 @@ export function saveNewProject(project: IProject) {
                 .then(project => {
                     if (project) {
                         dispatch(findAllProjects())
-                        dispatch(showAppMessage(MessageText.SuccessSave, MessageType.Success))
+                        dispatch(showAppMessage(MyToastMessageText.SuccessSave, MyToastMessageType.Success))
                     }
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.SomeError, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.SomeError, MyToastMessageType.Error))
         }
     }
 }

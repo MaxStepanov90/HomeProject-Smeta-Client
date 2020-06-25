@@ -29,8 +29,8 @@ class MarkUpForm extends React.Component<MarkUpFormProps & RouteComponentProps,M
     constructor(props: MarkUpFormProps & RouteComponentProps) {
         super(props);
         this.state = {
-            markUpName: '',
-            markUpPercent: 0,
+            markUpName: this.props.markUpName,
+            markUpPercent: this.props.markUpPercent,
         };
     }
 
@@ -45,8 +45,8 @@ class MarkUpForm extends React.Component<MarkUpFormProps & RouteComponentProps,M
         event.preventDefault();
         const markUp: IMarkUp = {
             id: this.props.id,
-            markUpName: this.props.markUpName,
-            markUpPercent: this.props.markUpPercent,
+            markUpName: this.state.markUpName,
+            markUpPercent: this.state.markUpPercent,
         }
         this.props.updateMarkUp(markUp);
         setTimeout(() => this.markUpList(), 1600);
@@ -67,7 +67,7 @@ class MarkUpForm extends React.Component<MarkUpFormProps & RouteComponentProps,M
         const markUpPercentInputField =
             <Form.Control required autoComplete="off"
                           type="text" name="markUpPercent"
-                          value={this.props.markUpPercent} onChange={this.markUpChange}/>
+                          value={this.state.markUpPercent} onChange={this.markUpChange}/>
 
         return (
             <Container className="text-center col-5">
@@ -81,7 +81,7 @@ class MarkUpForm extends React.Component<MarkUpFormProps & RouteComponentProps,M
                             <Form.Row>
                                 <Form.Group as={Row} controlId="formPlaintextMarkUpName">
                                     <Form.Label column sm="9">
-                                        {this.props.markUpName}
+                                        {this.state.markUpName}
                                     </Form.Label>
                                     <Col sm="3">
                                         {markUpPercentInputField}

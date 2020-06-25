@@ -1,6 +1,6 @@
 import React from "react";
 import {Toast} from "react-bootstrap";
-import {MessageType} from "../../../utils/MessageType";
+import {MyToastMessageType} from "../../../utils/MyToastMessageType";
 
 type MyToastProps = {
     show: boolean,
@@ -16,13 +16,13 @@ export const MyToast: React.FC<MyToastProps> = ({show, type, message}) => {
         right: '10px',
         boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
     };
-    const toastBodyStyle = `border text-white ${type === MessageType.Success ?
+    const toastBodyStyle = `border text-white ${type === MyToastMessageType.Success ?
         "border-success bg-success" : "border-danger bg-danger"}`
 
-    const toastHeaderStyle = `text-white ${type === MessageType.Success ?
+    const toastHeaderStyle = `text-white ${type === MyToastMessageType.Success ?
         "bg-success" : "bg-danger"}`
 
-    const toastHeaderText = type === MessageType.Success ? "Успешно" : "Ошибка"
+    const toastHeaderText = type === MyToastMessageType.Success ? "Успешно" : "Ошибка"
 
     return (
         <div style={{"display": show ? "block" : "none"}}>

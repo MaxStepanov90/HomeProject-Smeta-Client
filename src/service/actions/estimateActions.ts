@@ -3,8 +3,8 @@ import {IEstimate} from "../../interfaces/IEstimate.";
 import {Dispatch} from "react";
 import {Links} from "../../utils/Links";
 import {showAppMessage} from "./appActions";
-import {MessageText} from "../../utils/MessageText";
-import {MessageType} from "../../utils/MessageType";
+import {MyToastMessageText} from "../../utils/MyToastMessageText";
+import {MyToastMessageType} from "../../utils/MyToastMessageType";
 import {INewEstimate} from "../../interfaces/INewEstimate";
 
 const findAllEstimatesByProjectIdSuccess = (estimates: IEstimate[]) => {
@@ -34,7 +34,7 @@ export function findAllEstimatesByProjectId(projectId: number): (dispatch: Dispa
                     dispatch(findAllEstimatesByProjectIdSuccess(estimates))
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.ErrorRequestServer, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.ErrorRequestServer, MyToastMessageType.Error))
         }
     }
 }
@@ -49,7 +49,7 @@ export function findEstimateById(estimateId: number){
                 }
             })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.ErrorRequestServer,MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.ErrorRequestServer,MyToastMessageType.Error))
         }
     }
 }
@@ -60,10 +60,10 @@ export function deleteEstimate(estimateId: number) {
             await fetch(Links.DeleteEstimate + estimateId, {method: 'DELETE'})
                 .then(() => {
                     dispatch(deleteEstimateSuccess(estimateId))
-                    dispatch(showAppMessage(MessageText.SuccessDelete, MessageType.Success))
+                    dispatch(showAppMessage(MyToastMessageText.SuccessDelete, MyToastMessageType.Success))
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.SomeError, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.SomeError, MyToastMessageType.Error))
         }
     }
 }
@@ -81,11 +81,11 @@ export function saveNewEstimate(estimate: INewEstimate) {
                 .then(response => response.json())
                 .then(estimate => {
                     if (estimate) {
-                        dispatch(showAppMessage(MessageText.SuccessSave, MessageType.Success))
+                        dispatch(showAppMessage(MyToastMessageText.SuccessSave, MyToastMessageType.Success))
                     }
                 })
         } catch (e) {
-            dispatch(showAppMessage(MessageText.SomeError, MessageType.Error))
+            dispatch(showAppMessage(MyToastMessageText.SomeError, MyToastMessageType.Error))
         }
     }
 }
