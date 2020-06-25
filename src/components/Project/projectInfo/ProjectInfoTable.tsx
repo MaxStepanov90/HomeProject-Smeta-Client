@@ -40,11 +40,11 @@ export const ProjectInfoTable: React.FC<EstimatesTableProps> = (
                     </tr> :
                     estimates.map((estimate: IEstimate) => (
                         <tr key={estimate.id}>
-                            <td>{estimate.estimateName}</td>
-                            <td>{estimate.estimateCost}</td>
-                            <td>{estimate.estimatePerformance}</td>
-                            <td>{estimate.estimatePayment}</td>
-                            <td>{estimate.estimateNotPayment}</td>
+                            <td>{estimate.name}</td>
+                            <td>{estimate.cost}</td>
+                            <td>{estimate.performance}</td>
+                            <td>{estimate.payment}</td>
+                            <td>{estimate.notPayment}</td>
                             <td>
                                 <ButtonGroup>
                                     <Link to={{

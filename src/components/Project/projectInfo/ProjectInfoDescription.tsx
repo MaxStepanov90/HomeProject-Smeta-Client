@@ -51,8 +51,8 @@ export const ProjectInfoDescription: React.FC<ProjectInfoDescriptionProps> = (
                         : null}
                     {visible ? estimates.map((estimate: IEstimate) => (
                         <ProjectInfoProgressBar key={estimate.id}
-                                                name={estimate.estimateName}
-                                                value={estimate.estimateCost}
+                                                name={estimate.name}
+                                                value={estimate.cost}
                                                 complete={onPercentageEstimateDone(estimate)}/>
                     )) : null}
                 </Container>

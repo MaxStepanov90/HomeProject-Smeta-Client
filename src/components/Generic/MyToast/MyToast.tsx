@@ -1,7 +1,8 @@
 import React from "react";
 import {Toast} from "react-bootstrap";
+import {MessageType} from "../../../utils/MessageType";
 
-interface MyToastProps {
+type MyToastProps = {
     show: boolean,
     type: string,
     message: string,
@@ -9,29 +10,30 @@ interface MyToastProps {
 
 export const MyToast: React.FC<MyToastProps> = ({show, type, message}) => {
 
-    const toastCss: React.CSSProperties = {
+    const toastStyle: React.CSSProperties = {
         position: 'fixed',
         top: '10px',
         right: '10px',
-        // zIndex: '1',
         boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'
-    } ;
+    };
+    const toastBodyStyle = `border text-white ${type === MessageType.Success ?
+        "border-success bg-success" : "border-danger bg-danger"}`
+
+    const toastHeaderStyle = `text-white ${type === MessageType.Success ?
+        "bg-success" : "bg-danger"}`
+
+    const toastHeaderText = type === MessageType.Success ? "Успешно" : "Ошибка"
 
     return (
         <div style={{"display": show ? "block" : "none"}}>
-            <div style={show ? toastCss : undefined}>
-                <Toast className={`border text-white ${type === "success" ?
-                    "border-success bg-success" : "border-danger bg-danger"}`}
-                       show={show}>
-                    <Toast.Header className={`text-white ${type === "success" ?
-                        "bg-success" : "bg-danger"}`} closeButton={false}>
-                        <strong className="mr-auto">Успешно</strong>
+            <div style={show ? toastStyle : undefined}>
+                <Toast className={toastBodyStyle} show={show}>
+                    <Toast.Header className={toastHeaderStyle} closeButton={false}>
+                        <strong className="mr-auto">{toastHeaderText}</strong>
                     </Toast.Header>
-                    <Toast.Body>
-                        {message}
-                    </Toast.Body>
+                    <Toast.Body>{message}</Toast.Body>
                 </Toast>
             </div>
-        // </div>
+        </div>
     );
 }

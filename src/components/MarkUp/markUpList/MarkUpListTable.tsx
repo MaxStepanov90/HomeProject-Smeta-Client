@@ -9,7 +9,7 @@ import {IMarkUp} from "../../../interfaces/IMarkUp";
 
 type MarkUpListTableProps = {
     markUps: IMarkUp[];
-    onDeleteMarkUp(id: number): void;
+    onDeleteMarkUp:(markUpId: number) => void
 }
 
 export const MarkUpListTable: React.FC<MarkUpListTableProps> = ({markUps, onDeleteMarkUp}) => {
@@ -50,3 +50,4 @@ export const MarkUpListTable: React.FC<MarkUpListTableProps> = ({markUps, onDele
         </Table>
     )
 }
+

@@ -13,10 +13,10 @@ import {Welcome} from "./components/Welcome/Welcome";
 import EstimateDetailsTabs from "./components/EstimateDetail/Tabs/EstimateDetailsTabs";
 import PaymentList from "./components/Payment/paymentList/PaymentList";
 import EstimateDetailForm from "./components/EstimateDetail/estimateDetailForm/EstimateDetailForm";
-import MarkUpList from "./components/MarkUp/markUpList/MarkUpList";
-import MarkUpForm from "./components/MarkUp/markUpForm/MarkUpForm";
 import EstimateForm from "./components/Estimate/EstimateForm";
 import PaymentForm from "./components/Payment/paymentForm/PaymentForm";
+import MarkUpList from "./components/MarkUp/markUpList/MarkUpList";
+import MarkUpForm from "./components/MarkUp/markUpForm/MarkUpForm";
 
 function App() {
     return (

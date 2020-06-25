@@ -1,0 +1,3 @@
+export const FIND_ALL_MARK_UPS = "FIND_ALL_MARK_UPS";
+export const FIND_MARK_UP_BY_ID = "FIND_MARK_UP_BY_ID";
+export const DELETE_MARK_UP = "DELETE_MARK_UP";

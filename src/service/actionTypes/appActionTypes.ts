@@ -1,0 +1,2 @@
+export const SHOW_APP_MESSAGE = "SHOW_APP_MESSAGE";
+export const HIDE_APP_MESSAGE = "HIDE_APP_MESSAGE";

@@ -1,110 +1,62 @@
-import React from "react";
+import React, {Dispatch} from "react";
 import {MyToast} from "../../Generic/MyToast/MyToast";
 import {ProjectInfoTable} from "./ProjectInfoTable";
 import {RouteComponentProps} from "react-router-dom";
 import {IEstimate} from "../../../interfaces/IEstimate.";
 import {ProjectInfoDescription} from "./ProjectInfoDescription";
+import {findProjectById} from "../../../service/actions/projectActions";
+import {connect} from "react-redux";
+import {deleteEstimate, findAllEstimatesByProjectId} from "../../../service/actions/estimateActions";
+
+type ProjectInfoProps = {
+    show: any,
+    messageText: any,
+    messageType: any,
+    project: any,
+    estimates: any [],
+    findProjectById: (projectId: number) => void,
+    findAllEstimatesByProjectId: (projectId: number) => void,
+    deleteEstimate: (estimateId: number) => void,
+}
 
 type ProjectInfoState = {
     estimates: IEstimate[],
     estimateName: string,
     visible: boolean,
     projectId: number,
-    show: boolean,
-    projectName: string,
-    projectAddress: string,
-    projectContract: string,
-    projectDescription: string,
-    projectCreationDate: string,
-    projectOwner: string
+    show: boolean
 }
-export default class ProjectInfo extends React.Component<RouteComponentProps, ProjectInfoState> {
-    constructor(props: RouteComponentProps) {
+class ProjectInfo extends React.Component<ProjectInfoProps&RouteComponentProps, ProjectInfoState> {
+    constructor(props: ProjectInfoProps&RouteComponentProps) {
         super(props);
         this.state = {
             estimates: [],
             estimateName: '',
             visible: false,
             projectId: (this.props.match.params as any).id,
-            show: false,
-            projectName: '',
-            projectAddress: '',
-            projectContract: '',
-            projectCreationDate: '',
-            projectDescription: '',
-            projectOwner: ''
+            show: false
         }
     }
 
     componentDidMount() {
         const projectId = this.state.projectId;
         if (projectId) {
-            this.findProjectById(projectId);
-            this.findAllEstimatesByProjectId(projectId);
+            this.props.findProjectById(projectId);
+            this.props.findAllEstimatesByProjectId(projectId);
         }
     }
-
-    findProjectById = (projectId: number): void => {
-        fetch("http://localhost:8080/remsmet/projects/" + projectId)
-            .then(response => response.json())
-            .then((project) => {
-                if (project) {
-                    this.setState({
-                        projectId: project.id,
-                        projectName: project.projectName,
-                        projectAddress: project.projectAddress,
-                        projectContract: project.projectContract,
-                        projectCreationDate: project.projectCreationDate,
-                        projectDescription: project.projectDescription,
-                        projectOwner: project.projectOwner
-                    })
-                }
-            }).catch((error) => {
-            console.error('Error' + error)
-        });
-
-    };
-
-    findAllEstimatesByProjectId(projectId: number): void {
-        fetch("http://localhost:8080/remsmet/estimates/projectId/" + projectId)
-            .then(response => response.json())
-            .then((data) => {
-                this.setState({
-                    estimates: data
-                })
-            });
-    }
-
-    deleteEstimate = (estimateId: number): void => {
-        fetch("http://localhost:8080/remsmet/estimates/" + estimateId, {
-            method: 'DELETE'
-        })
-            .then(response => response.json())
-            .then(estimate => {
-                if (estimate) {
-                    this.setState({show: true});
-                    setTimeout(() => this.setState({show: false}), 3000);
-                    this.setState({
-                        estimates: this.state.estimates.filter(estimate => estimate.id !== estimateId)
-                    });
-                } else {
-                    this.setState({show: false});
-                }
-            })
-    };
-
 
     sumAllEstimateCost = (estimates: IEstimate[]): number => {
         let sum = 0;
         for (let i = 0; i < estimates.length; i++) {
-            sum += estimates[i].estimateCost;
+            sum += estimates[i].cost;
         }
         return sum
     };
 
     percentageEstimateDone = (estimate: IEstimate): number => {
-        const result = Math.ceil(estimate.estimatePerformance / (estimate.estimateCost / 100));
-        if (isNaN(result)){
+        const result = Math.ceil(estimate.performance / (estimate.cost / 100));
+        if (isNaN(result)) {
             return 0
         }
         return result;
@@ -116,22 +68,21 @@ export default class ProjectInfo extends React.Component<RouteComponentProps, Pr
 
     render() {
 
-        const {
-            estimates, projectContract, projectName, projectAddress, projectDescription, projectOwner,
-            show, estimateName, projectId, visible
-        } = this.state;
+        const {estimateName, visible} = this.state;
+        const project = this.props.project;
+        const estimates = this.props.estimates;
         const sumAllEstimatesCost = this.sumAllEstimateCost(estimates)
         const buttonText = this.state.visible ? "скрыть детали" : "подробнее...";
 
         return (
             <div className="border border-dark bg-white m-3">
-                <MyToast show={show} message={"Смета удалена"} type={"danger"}/>
+                <MyToast show={this.props.show} message={this.props.messageText} type={this.props.messageType}/>
                 <div className="container-fluid my-4">
-                    <ProjectInfoDescription projectName={projectName}
-                                            projectAddress={projectAddress}
-                                            projectContract={projectContract}
-                                            projectDescription={projectDescription}
-                                            projectOwner={projectOwner}
+                    <ProjectInfoDescription projectName={project.name}
+                                            projectAddress={project.address}
+                                            projectContract={project.contract}
+                                            projectDescription={project.description}
+                                            projectOwner={project.owner}
                                             estimates={estimates}
                                             sumAllEstimateCost={sumAllEstimatesCost}
                                             buttonText={buttonText}
@@ -142,8 +93,8 @@ export default class ProjectInfo extends React.Component<RouteComponentProps, Pr
                     <div className="container my-5">
                         <ProjectInfoTable estimates={estimates}
                                           estimateName={estimateName}
-                                          projectId={projectId}
-                                          onDeleteEstimate={this.deleteEstimate}
+                                          projectId={project.id}
+                                          onDeleteEstimate={this.props.deleteEstimate}
                         />
                     </div>
                 </div>
@@ -151,3 +102,22 @@ export default class ProjectInfo extends React.Component<RouteComponentProps, Pr
         )
     }
 }
+
+const mapStateToProps = (state: any) => {
+    return {
+        show: state.app.show,
+        messageText: state.app.messageText,
+        messageType: state.app.messageType,
+        project: state.projects.project,
+        estimates: state.estimates.estimates,
+    }
+}
+const mapDispatchToProps = (dispatch: Dispatch<any>) => {
+    return {
+        findProjectById: (projectId: number) => (dispatch(findProjectById(projectId))),
+        findAllEstimatesByProjectId: (projectId: number) => (dispatch(findAllEstimatesByProjectId(projectId))),
+        deleteEstimate: (estimateId: number) => (dispatch(deleteEstimate(estimateId))),
+
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectInfo)

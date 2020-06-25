@@ -1,4 +1,4 @@
 export interface INewEstimate {
-    estimateName: string,
+    name: string,
     projectId: number
 }

@@ -1,11 +1,20 @@
-import React, {FormEvent} from 'react';
+import React, {Dispatch, FormEvent} from 'react';
 
 import {Button, Card, Col, Container, Form} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faFolderPlus, faList, faSave} from '@fortawesome/free-solid-svg-icons';
 import {MyToast} from "../../Generic/MyToast/MyToast";
 import {RouteComponentProps} from "react-router-dom";
+import {connect} from "react-redux";
+import {IProject} from "../../../interfaces/IProject";
+import {saveNewProject} from "../../../service/actions/projectActions";
 
+type ProjectFormProps = {
+    show: any,
+    messageText: any,
+    messageType: any,
+    saveNewProject: (project: IProject) => void
+}
 type ProjectFormState = {
     show: boolean,
     projectContract: string,
@@ -16,8 +25,8 @@ type ProjectFormState = {
     projectOwner: string
 }
 
-export default class ProjectForm extends React.Component<RouteComponentProps, ProjectFormState> {
-    constructor(props: RouteComponentProps) {
+class ProjectForm extends React.Component<ProjectFormProps&RouteComponentProps, ProjectFormState> {
+    constructor(props: ProjectFormProps&RouteComponentProps) {
         super(props);
         this.state = {
             show: false,
@@ -32,42 +41,17 @@ export default class ProjectForm extends React.Component<RouteComponentProps, Pr
 
     submitProject = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
         const project = {
-            projectContract: this.state.projectContract,
-            projectName: this.state.projectName,
-            projectAddress: this.state.projectAddress,
-            projectCreationDate: this.state.projectCreationDate,
-            projectDescription: this.state.projectDescription,
-            projectOwner: this.state.projectOwner
+            contract: this.state.projectContract,
+            name: this.state.projectName,
+            address: this.state.projectAddress,
+            creationDate: this.state.projectCreationDate,
+            description: this.state.projectDescription,
+            owner: this.state.projectOwner
         };
-        const headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-
-        fetch("http://localhost:8080/remsmet/projects", {
-            method: 'POST',
-            body: JSON.stringify(project),
-            headers
-        })
-            .then(response => response.json())
-            .then(project => {
-                if (project) {
-                    this.setState({show: true});
-                    setTimeout(() => this.setState({show: false}), 1500);
-                    setTimeout(() => this.projectList(), 1600);
-                } else {
-                    this.setState({show: false})
-                }
-            });
-        this.setState({
-            projectContract: '',
-            projectName: '',
-            projectAddress: '',
-            projectCreationDate: '',
-            projectDescription: '',
-            projectOwner: ''
-        });
-    };
+        this.props.saveNewProject(project);
+        setTimeout(() => this.projectList(), 1600);
+    }
 
     projectChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
@@ -80,9 +64,7 @@ export default class ProjectForm extends React.Component<RouteComponentProps, Pr
     };
 
     render() {
-        const {
-            projectContract, projectName, projectAddress, projectCreationDate, projectDescription, projectOwner, show
-        } = this.state;
+        const {projectContract, projectName, projectAddress, projectCreationDate, projectDescription, projectOwner} = this.state;
 
         const projectContractInputField =
             <Form.Group as={Col} controlId="formGridProjectContract">
@@ -137,7 +119,7 @@ export default class ProjectForm extends React.Component<RouteComponentProps, Pr
 
         return (
             <Container>
-                <MyToast show={show} message={"Проект успешно сохранен."} type={"success"}/>
+                <MyToast show={this.props.show} message={this.props.messageText} type={this.props.messageType}/>
                 <Card className={"border border-dark"}>
                     <Card.Header>
                         <FontAwesomeIcon icon={faFolderPlus}/>&nbsp;Новый проект
@@ -173,3 +155,18 @@ export default class ProjectForm extends React.Component<RouteComponentProps, Pr
         );
     }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => {
+    return {
+        saveNewProject: (project: IProject) => dispatch(saveNewProject(project))
+    }
+}
+const mapStateToProps = (state: any) => {
+    return {
+        show: state.app.show,
+        messageType: state.app.messageType,
+        messageText: state.app.messageText,
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectForm)

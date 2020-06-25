@@ -1,9 +1,19 @@
-import React, {FormEvent} from "react";
+import React, {Dispatch, FormEvent} from "react";
 import {Button, Card, Col, Container, Form} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFolderOpen, faPlus, faSave} from "@fortawesome/free-solid-svg-icons";
 import {MyToast} from "../Generic/MyToast/MyToast";
 import {RouteComponentProps} from "react-router-dom";
+import {connect} from "react-redux";
+import {saveNewEstimate} from "../../service/actions/estimateActions";
+import {INewEstimate} from "../../interfaces/INewEstimate";
+
+type EstimateFormProps = {
+    show: any,
+    messageText: any,
+    messageType: any,
+    saveNewEstimate: (estimate: INewEstimate) => void
+}
 
 type EstimateFormState = {
     show: boolean,
@@ -11,9 +21,8 @@ type EstimateFormState = {
     projectId: number
 }
 
-export default class EstimateForm
-    extends React.Component<RouteComponentProps, EstimateFormState> {
-    constructor(props: RouteComponentProps) {
+class EstimateForm extends React.Component<EstimateFormProps&RouteComponentProps, EstimateFormState> {
+    constructor(props: EstimateFormProps&RouteComponentProps) {
         super(props);
         this.state = {
             show: false,
@@ -25,31 +34,12 @@ export default class EstimateForm
     submitEstimate = (event: FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
         const estimate = {
-            estimateName: this.state.estimateName,
+            name: this.state.estimateName,
             projectId: this.state.projectId
         };
-        const headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-
-        fetch("http://localhost:8080/remsmet/estimates", {
-            method: 'POST',
-            body: JSON.stringify(estimate),
-            headers
-        })
-            .then(response => response.json())
-            .then(estimate => {
-                if (estimate) {
-                    this.setState({show: true});
-                    setTimeout(() => this.setState({show: false}), 1000);
-                    setTimeout(() => this.estimateList(this.state.projectId), 1100);
-                } else {
-                    this.setState({show: false})
-                }
-            });
-        this.setState({
-            estimateName: ''
-        });
-    };
+        this.props.saveNewEstimate(estimate);
+        setTimeout(() => this.estimateList(this.state.projectId), 1600)
+    }
 
     estimateList = (projectId: number): void => {
         return this.props.history.push("/projectInfo/" + projectId)
@@ -101,3 +91,18 @@ export default class EstimateForm
         )
     }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => {
+    return {
+        saveNewEstimate: (estimate: INewEstimate) => dispatch(saveNewEstimate(estimate))
+    }
+}
+const mapStateToProps = (state: any) => {
+    return {
+        show: state.app.show,
+        messageType: state.app.messageType,
+        messageText: state.app.messageText,
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EstimateForm)

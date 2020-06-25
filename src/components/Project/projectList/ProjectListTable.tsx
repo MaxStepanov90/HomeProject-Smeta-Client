@@ -10,24 +10,17 @@ import './ProjectStyle.css';
 
 type ProjectListTableProps = {
     projects: IProject[],
-    onSortData: () => void,
-    sortToggle: boolean,
-    onDeleteProject: (id: number) => void,
+    onDeleteProject: (id: number | undefined) => void,
 }
 
-export const ProjectListTable: React.FC<ProjectListTableProps> = (
-    {projects, onSortData, sortToggle = false, onDeleteProject}
-) => {
+export const ProjectListTable: React.FC<ProjectListTableProps> = ({projects,  onDeleteProject}) => {
 
     return (
         <Table bordered hover striped>
             <thead>
             <tr>
                 <th>Номер</th>
-                <th onClick={() => onSortData}>
-                    Дата
-                    <div className={sortToggle ? "arrow arrow-down" : "arrow arrow-up"}/>
-                </th>
+                <th>Дата</th>
                 <th>Название</th>
                 <th>Адрес</th>
                 <th>Заказчик</th>
@@ -40,11 +33,11 @@ export const ProjectListTable: React.FC<ProjectListTableProps> = (
                 </tr> :
                 projects.map((project: IProject) => (
                     <tr key={project.id}>
-                        <td>{project.projectContract}</td>
-                        <td>{project.projectCreationDate}</td>
-                        <td>{project.projectName}</td>
-                        <td>{project.projectAddress}</td>
-                        <td>{project.projectOwner}</td>
+                        <td>{project.contract}</td>
+                        <td>{project.creationDate}</td>
+                        <td>{project.name}</td>
+                        <td>{project.address}</td>
+                        <td>{project.owner}</td>
                         <td>
                             <ButtonGroup>
                                 <Link to={"projectInfo/" + project.id}

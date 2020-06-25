@@ -1,21 +1,27 @@
-import React, {Component} from "react";
+import React, {Component, Dispatch} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFolderOpen, faInfo} from "@fortawesome/free-solid-svg-icons";
 import {Button, Card, Container} from "react-bootstrap";
-import {IPayment} from "../../../interfaces/IPayment";
 import {RouteComponentProps} from "react-router-dom";
 import {PaymentListTable} from "./PaymentListTable";
+import {connect} from "react-redux";
+import {MyToast} from "../../Generic/MyToast/MyToast";
+import {findAllPaymentsByProjectId} from "../../../service/actions/paymentActions";
 
-type PaymentListProps = {}
+type PaymentListProps = {
+    show: boolean,
+    messageText: string,
+    messageType: string,
+    payments: any,
+    findAllPaymentsByProjectId: (projectId: number) => void
+}
 type PaymentListState = {
-    payments: IPayment[],
     projectId: number
 }
-export default class PaymentList extends Component<PaymentListProps & RouteComponentProps, PaymentListState> {
+class PaymentList extends Component<PaymentListProps & RouteComponentProps, PaymentListState> {
     constructor(props: PaymentListProps & RouteComponentProps) {
         super(props);
         this.state = {
-            payments: [],
             projectId: (this.props.history.location.state as any).projectId
         };
     }
@@ -23,19 +29,8 @@ export default class PaymentList extends Component<PaymentListProps & RouteCompo
     componentDidMount() {
         const projectId = this.state.projectId;
         if (projectId) {
-            this.findAllPaymentsByProjectId(projectId)
+            this.props.findAllPaymentsByProjectId(projectId)
         }
-    }
-
-    findAllPaymentsByProjectId(projectId: number): void {
-        console.log(projectId)
-        fetch("http://localhost:8080/remsmet/payments/projectId/" + projectId)
-            .then(response => response.json())
-            .then((data) => {
-                this.setState({
-                    payments: data
-                })
-            });
     }
 
     paymentList = (projectId: number): void => {
@@ -43,13 +38,13 @@ export default class PaymentList extends Component<PaymentListProps & RouteCompo
         return this.props.history.push("/projectInfo/" + projectId)
     };
 
-
     render() {
-
-        const {payments, projectId} = this.state;
+        const {projectId} = this.state;
+        const {payments} = this.props.payments
 
         return (
             <Container>
+                <MyToast show={this.props.show} message={this.props.messageText} type={this.props.messageType}/>
                 <Card className={"border border-dark"}>
                     <Card.Header>
                         <FontAwesomeIcon icon={faInfo}/>&nbsp;Платежи
@@ -68,3 +63,17 @@ export default class PaymentList extends Component<PaymentListProps & RouteCompo
         )
     }
 }
+const mapStateToProps = (state: any) =>{
+    return {
+        show: state.app.show,
+        messageText: state.app.messageText,
+        messageType: state.app.messageType,
+        payments: state.payments
+    }
+}
+const mapDispatchToProps = (dispatch: Dispatch<any>) => {
+    return {
+        findAllPaymentsByProjectId: (projectId: number) => (dispatch(findAllPaymentsByProjectId(projectId)))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(PaymentList)

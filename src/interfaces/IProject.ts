@@ -1,9 +1,9 @@
 export interface IProject {
-    id: number,
-    projectName?: string,
-    projectAddress?: string,
-    projectContract?: string,
-    projectCreationDate?: string,
-    projectDescription?: string,
-    projectOwner?: string
+    id?: number,
+    name?: string,
+    address?: string,
+    contract?: string,
+    creationDate?: string,
+    description?: string,
+    owner?: string
 }

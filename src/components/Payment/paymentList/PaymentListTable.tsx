@@ -5,9 +5,7 @@ import {IPayment} from "../../../interfaces/IPayment";
 type PaymentListTableProps = {
     payments: IPayment[]
 }
-
 export const PaymentListTable: React.FC<PaymentListTableProps> = ({payments}) => {
-
     return (
         <Table bordered hover striped>
             <thead>
