@@ -26,9 +26,9 @@ const deleteMarkUpSuccess = (markUpId: number) => {
     }
 }
 export function findAllMarkUps(): (dispatch: Dispatch<any>) => void {
-    return async (dispatch) => {
+    return (dispatch) => {
         try {
-            await fetch(Links.FindAllMarkUps)
+             fetch(Links.FindAllMarkUps)
                 .then(response => response.json())
                 .then((markUps: IMarkUp[]) => {
                     dispatch(findAllMarkUpsSuccess(markUps))
@@ -41,9 +41,9 @@ export function findAllMarkUps(): (dispatch: Dispatch<any>) => void {
 }
 
 export function findMarkUpById(markUpId: number) {
-    return async (dispatch: Dispatch<any>) => {
+    return (dispatch: Dispatch<any>) => {
         try {
-            await fetch(Links.FindMarkUpById + markUpId)
+             fetch(Links.FindMarkUpById + markUpId)
                 .then(response => response.json())
                 .then((markUp: IMarkUp) => {
                     dispatch(findMarkUpByIdSuccess(markUp))
@@ -55,11 +55,11 @@ export function findMarkUpById(markUpId: number) {
 }
 
 export function updateMarkUp(markUp: IMarkUp) {
-    return async (dispatch: Dispatch<any>) => {
+    return (dispatch: Dispatch<any>) => {
         try {
             const headers = new Headers();
             headers.append('Content-Type', 'application/json');
-            await fetch(Links.UpdateMarkUp, {
+             fetch(Links.UpdateMarkUp, {
                 method: 'PUT',
                 body: JSON.stringify(markUp),
                 headers

@@ -6,13 +6,16 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faEye, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {Button} from "react-bootstrap";
 import {IMarkUp} from "../../../interfaces/IMarkUp";
+import {useDispatch} from "react-redux";
+import {deleteMarkUp} from "../../../service/actions/markUpActions";
 
 type MarkUpListTableProps = {
     markUps: IMarkUp[];
-    onDeleteMarkUp:(markUpId: number) => void
 }
 
-export const MarkUpListTable: React.FC<MarkUpListTableProps> = ({markUps, onDeleteMarkUp}) => {
+export const MarkUpListTable: React.FC<MarkUpListTableProps> = ({markUps}) => {
+
+    const dispatch = useDispatch()
 
     return (
         <Table bordered hover striped>
@@ -38,7 +41,7 @@ export const MarkUpListTable: React.FC<MarkUpListTableProps> = ({markUps, onDele
                                     <FontAwesomeIcon icon={faEye}/>
                                 </Link>
                                 <Button size="sm" variant="outline-danger"
-                                        onClick={() => onDeleteMarkUp(markUp.id)}>
+                                        onClick={() => dispatch(deleteMarkUp(markUp.id))}>
                                     <FontAwesomeIcon icon={faTrash}/>
                                 </Button>
                             </ButtonGroup>

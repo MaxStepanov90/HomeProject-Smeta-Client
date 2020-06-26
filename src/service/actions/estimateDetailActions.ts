@@ -4,7 +4,11 @@ import {showAppMessage} from "./appActions";
 import {MyToastMessageText} from "../../utils/MyToastMessageText";
 import {MyToastMessageType} from "../../utils/MyToastMessageType";
 import {IEstimateDetail} from "../../interfaces/IEstimateDetail";
-import {DELETE_ESTIMATE_DETAIL, FIND_ALL_ESTIMATE_DETAILS} from "../actionTypes/estimateDetailActionTypes";
+import {
+    DELETE_ESTIMATE_DETAIL,
+    FIND_ALL_ESTIMATE_DETAILS,
+    TOGGLE_ESTIMATE_DETAIL
+} from "../actionTypes/estimateDetailActionTypes";
 
 
 const findAllEstimateDetailsSuccess = (estimateDetails: IEstimateDetail[]) => {
@@ -16,6 +20,12 @@ const findAllEstimateDetailsSuccess = (estimateDetails: IEstimateDetail[]) => {
 const deleteEstimateDetailSuccess = (estimateDetailId: number) => {
     return {
         type: DELETE_ESTIMATE_DETAIL,
+        payload: estimateDetailId
+    }
+}
+const toggleEstimateDetailCompleteSuccess = (estimateDetailId: number) => {
+    return {
+        type: TOGGLE_ESTIMATE_DETAIL,
         payload: estimateDetailId
     }
 }

@@ -1,124 +1,96 @@
-import React, {Dispatch, FormEvent} from "react";
+import React, {FormEvent, useEffect, useState} from "react";
 import {Button, Card, Col, Container, Form} from "react-bootstrap";
 import {MyToast} from "../../Generic/MyToast/MyToast";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faList, faPercent, faSave} from "@fortawesome/free-solid-svg-icons";
 import Row from "react-bootstrap/Row";
-import {RouteComponentProps} from "react-router-dom";
 import {IMarkUp} from "../../../interfaces/IMarkUp";
 import {findMarkUpById, updateMarkUp} from "../../../service/actions/markUpActions";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {IRootState} from "../../../interfaces/IRootState";
 
-type MarkUpFormProps = {
-    show: any,
-    id: any,
-    markUpName: any,
-    markUpPercent: any,
-    messageText: any,
-    messageType: any,
-    findMarkUpById: (markUpId: number) => void,
-    updateMarkUp: (markUp: IMarkUp) => void,
-    onChange: (e: any) => void
-}
-type MarkUpFormState = {
-    markUpName: string;
-    markUpPercent: number ;
+interface RouterProps {
+    id: string;
 }
 
-class MarkUpForm extends React.Component<MarkUpFormProps & RouteComponentProps,MarkUpFormState> {
-    constructor(props: MarkUpFormProps & RouteComponentProps) {
-        super(props);
-        this.state = {
-            markUpName: this.props.markUpName,
-            markUpPercent: this.props.markUpPercent,
-        };
-    }
+interface MarkUpFormProps extends RouterProps {
+    match: any,
+    history: any
+}
 
-    componentDidMount() {
-        const markUpId = (this.props.match.params as any).id
+const MarkUpForm: React.FC<MarkUpFormProps> = ({history, match}) => {
+
+    const show = useSelector((state: IRootState) => state.app.show)
+    const messageText = useSelector((state: IRootState) => state.app.messageText)
+    const messageType = useSelector((state: IRootState) => state.app.messageType)
+    const markUpId = useSelector((state: IRootState) => state.markUps.markUp.id)
+    const markUpName = useSelector((state: IRootState) => state.markUps.markUp.markUpName)
+    const markUpPercent = useSelector((state: IRootState) => state.markUps.markUp.markUpPercent)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        const markUpId = parseInt(match.params.id)
         if (markUpId) {
-            this.props.findMarkUpById(markUpId);
+            dispatch(findMarkUpById(markUpId));
         }
-    };
+    }, [dispatch])
 
-    updateMarkUp = (event: FormEvent<HTMLFormElement>): void => {
+    const [percent, setPercent] = useState(0)
+
+    const update = (event: FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
         const markUp: IMarkUp = {
-            id: this.props.id,
-            markUpName: this.state.markUpName,
-            markUpPercent: this.state.markUpPercent,
+            id: markUpId,
+            markUpName: markUpName,
+            markUpPercent: percent,
         }
-        this.props.updateMarkUp(markUp);
-        setTimeout(() => this.markUpList(), 1600);
+        dispatch(updateMarkUp(markUp));
+        setTimeout(() => markUpList(), 1600);
     };
 
-    markUpList = (): void => {
-        return this.props.history.push("/markUps")
+    const markUpList = (): void => {
+        return history.push("/markUps")
     };
 
-    markUpChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        this.setState({
-            [event.target.name]: event.target.value
-        } as any)
-    };
+    // const markUpChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    //     setPercent(parseInt(event.target.value))
+    // };
 
-    render() {
-
-        const markUpPercentInputField =
-            <Form.Control required autoComplete="off"
-                          type="text" name="markUpPercent"
-                          value={this.state.markUpPercent} onChange={this.markUpChange}/>
-
-        return (
-            <Container className="text-center col-5">
-                <MyToast show={this.props.show} message={this.props.messageText} type={this.props.messageType}/>
-                <Card className={"border border-dark"}>
-                    <Card.Header>
-                        <FontAwesomeIcon icon={faPercent}/>&nbsp;Наценка
-                    </Card.Header>
-                    <Form onSubmit={this.updateMarkUp} id="markUpFormId">
-                        <Card.Body>
-                            <Form.Row>
-                                <Form.Group as={Row} controlId="formPlaintextMarkUpName">
-                                    <Form.Label column sm="9">
-                                        {this.state.markUpName}
-                                    </Form.Label>
-                                    <Col sm="3">
-                                        {markUpPercentInputField}
-                                    </Col>
-                                </Form.Group>
-                            </Form.Row>
-                        </Card.Body>
-                        <Card.Footer style={{"textAlign": "right"}}>
-                            <Button size="sm" variant="success" type="submit">
-                                <FontAwesomeIcon icon={faSave}/>&nbsp;Сохранить
-                            </Button>{' '}
-                            <Button size="sm" variant="info" type="button" onClick={() => this.markUpList()}>
-                                <FontAwesomeIcon icon={faList}/>&nbsp;Список наценок
-                            </Button>
-                        </Card.Footer>
-                    </Form>
-                </Card>
-            </Container>
-        )
-    }
+    return (
+        <Container className="text-center col-5">
+            <MyToast show={show} message={messageText} type={messageType}/>
+            <Card className={"border border-dark"}>
+                <Card.Header>
+                    <FontAwesomeIcon icon={faPercent}/>&nbsp;Наценка
+                </Card.Header>
+                <Form onSubmit={update} id="markUpFormId">
+                    <Card.Body>
+                        <Form.Row>
+                            <Form.Group as={Row} controlId="formPlaintextMarkUpName">
+                                <Form.Label column sm="9">
+                                    {markUpName}
+                                </Form.Label>
+                                <Col sm="3">
+                                    <Form.Control required autoComplete="off"
+                                                  type="text" name="percent"
+                                                  value={markUpPercent}
+                                                  onChange={event => setPercent(parseInt(event.target.value))}/>
+                                </Col>
+                            </Form.Group>
+                        </Form.Row>
+                    </Card.Body>
+                    <Card.Footer style={{"textAlign": "right"}}>
+                        <Button size="sm" variant="success" type="submit">
+                            <FontAwesomeIcon icon={faSave}/>&nbsp;Сохранить
+                        </Button>{' '}
+                        <Button size="sm" variant="info" type="button" onClick={() => markUpList()}>
+                            <FontAwesomeIcon icon={faList}/>&nbsp;Список наценок
+                        </Button>
+                    </Card.Footer>
+                </Form>
+            </Card>
+        </Container>
+    )
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => {
-    return {
-        findMarkUpById: (markUpId: number) => dispatch(findMarkUpById(markUpId)),
-        updateMarkUp: (markUp: IMarkUp) => dispatch(updateMarkUp(markUp))
-    }
-}
-const mapStateToProps = (state: any) => {
-    return {
-        show: state.app.show,
-        id: state.markUps.markUp.id,
-        markUpName: state.markUps.markUp.markUpName,
-        markUpPercent: state.markUps.markUp.markUpPercent,
-        messageType: state.app.messageType,
-        messageText: state.app.messageText
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MarkUpForm)
+export default MarkUpForm
