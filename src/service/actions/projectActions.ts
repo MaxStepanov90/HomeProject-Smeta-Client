@@ -5,6 +5,7 @@ import {showAppMessage} from "./appActions";
 import {MyToastMessageText} from "../../utils/MyToastMessageText";
 import {MyToastMessageType} from "../../utils/MyToastMessageType";
 import {Links} from "../../utils/Links";
+import {INewProject} from "../../interfaces/INewProject";
 
 const findProjectByIdSuccess = (project: IProject) => {
     return {
@@ -43,9 +44,9 @@ export function findProjectById(projectId: number) {
 }
 
 export function findAllProjects() {
-    return async (dispatch: Dispatch<any>) => {
+    return (dispatch: Dispatch<any>) => {
         try {
-            await fetch(Links.FindAllProjects)
+             fetch(Links.FindAllProjects)
                 .then(response => response.json())
                 .then((projects) => {
                     dispatch(findAllProjectsSuccess(projects))
@@ -70,12 +71,12 @@ export function deleteProject(projectId: number) {
     }
 }
 
-export function saveNewProject(project: IProject) {
+export function saveNewProject(project: INewProject) {
     return async (dispatch: Dispatch<any>) => {
         try {
             const headers = new Headers();
             headers.append('Content-Type', 'application/json');
-            await fetch(Links.SaveProject, {
+             await fetch(Links.SaveProject, {
                 method: 'PUT',
                 body: JSON.stringify(project),
                 headers
@@ -83,7 +84,6 @@ export function saveNewProject(project: IProject) {
                 .then(response => response.json())
                 .then(project => {
                     if (project) {
-                        dispatch(findAllProjects())
                         dispatch(showAppMessage(MyToastMessageText.SuccessSave, MyToastMessageType.Success))
                     }
                 })

@@ -1,27 +1,32 @@
 import React from "react";
 import ProgressBar from "react-bootstrap/ProgressBar";
+import {IEstimate} from "../../../interfaces/IEstimate.";
 
 type ProjectInfoProgressBarProps = {
-    name: string,
-    value: number,
-    complete: number
+    estimate: IEstimate
 }
 
-export const ProjectInfoProgressBar: React.FC<ProjectInfoProgressBarProps> = (
-    {name, value , complete }
-) => {
+export const ProjectInfoProgressBar: React.FC<ProjectInfoProgressBarProps> = ({estimate}) => {
+
+    const percentageEstimateDone = (estimate: IEstimate): number => {
+        const result = Math.ceil(estimate.performance / (estimate.cost / 100));
+        if (isNaN(result)) {
+            return 0
+        }
+        return result;
+    };
 
     return (
         <div className="row">
             <div className="col my-2">
                 <div className="row justify-content-between">
-                    <div className="col my-2">{name}</div>
-                    <div className="col-1 my-2">{value}</div>
+                    <div className="col my-2">{estimate.name}</div>
+                    <div className="col-1 my-2">{estimate.cost}</div>
                 </div>
                 <div>
                     <ProgressBar variant="success"
-                                 now={complete}
-                                 label={complete + "%"}/>
+                                 now={percentageEstimateDone(estimate)}
+                                 label={percentageEstimateDone(estimate) + "%"}/>
                 </div>
             </div>
         </div>

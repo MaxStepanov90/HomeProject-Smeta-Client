@@ -67,7 +67,6 @@ export function updateMarkUp(markUp: IMarkUp) {
                 .then(response => response.json())
                 .then(markUp => {
                     if (markUp) {
-                        dispatch(findAllMarkUps())
                         dispatch(showAppMessage(MyToastMessageText.SuccessPut, MyToastMessageType.Success))
                     }
                 })

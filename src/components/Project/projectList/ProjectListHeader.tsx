@@ -2,11 +2,7 @@ import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFolderOpen} from "@fortawesome/free-solid-svg-icons";
 
-type ProjectListHeaderProps = {
-    currentPage: number,
-}
-
-export const ProjectListHeader: React.FC<ProjectListHeaderProps> = ({currentPage}) => {
+export const ProjectListHeader: React.FC = () => {
     return (
         <div>
             <div style={{"float": "left"}}>

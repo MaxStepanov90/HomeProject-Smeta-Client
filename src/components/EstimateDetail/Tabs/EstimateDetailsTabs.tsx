@@ -1,86 +1,53 @@
-import React, {Dispatch, Fragment} from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import {Tab, Tabs} from "react-bootstrap";
 import {GeneralTab} from "./generalTab/GeneralTab";
 import {CategoryTab} from "./categoryTab/CategoryTab";
 import {ClientTab} from "./clientTab/ClientTab";
 import {MyToast} from "../../Generic/MyToast/MyToast";
 import {IEstimateDetail} from "../../../interfaces/IEstimateDetail";
-import {IPayment} from "../../../interfaces/IPayment";
-import {RouteComponentProps} from "react-router-dom";
-import {connect} from "react-redux";
-import {
-    deleteEstimateDetail,
-    findAllEstimateDetails,
-    updateEstimateDetail
-} from "../../../service/actions/estimateDetailActions";
+import {useDispatch, useSelector} from "react-redux";
+import {findAllEstimateDetails, updateEstimateDetail} from "../../../service/actions/estimateDetailActions";
 import {findEstimateById} from "../../../service/actions/estimateActions";
-import {IEstimate} from "../../../interfaces/IEstimate.";
 import {findAllPaymentsByEstimateId} from "../../../service/actions/paymentActions";
 import {Category} from "../../../utils/Category";
+import {IRootState} from "../../../interfaces/IRootState";
 
-type EstimateDetailsTabsProps = {
-    show: boolean,
-    messageText: string,
-    messageType: string,
-    estimate: IEstimate,
-    estimateDetails: IEstimateDetail[],
-    estimateDetailsWork: IEstimateDetail[],
-    estimateDetailsMaterial: IEstimateDetail[],
-    payments: IPayment[],
-    paymentsWork: IPayment[],
-    paymentsMaterial: IPayment[],
-    findAllEstimateDetails: (estimateId: number) => void,
-    findEstimateById: (estimateId: number) => void,
-    findAllPaymentsByEstimateId: (estimateId: number) => void,
-    deleteEstimateDetail: (estimateDetailId: number) => void,
-    updateEstimateDetail: (estimateDetail: IEstimateDetail) => void
-}
-type EstimateDetailsTabsState = {
-    estimateId: number,
-    estimateName: string,
-    estimateDetails: IEstimateDetail[],
-    estimateDetailsWork: IEstimateDetail[],
-    estimateDetailsMaterial: IEstimateDetail[],
-    payments: IPayment[],
-    paymentsWork: IPayment[],
-    paymentsMaterial: IPayment[],
-    activeTab: string,
-    complete: boolean,
-    response: Response | null,
-    headers: Headers | null
+interface RouterProps {
+    estimateId: any;
 }
 
-class EstimateDetailsTabs extends React.Component<EstimateDetailsTabsProps & RouteComponentProps, EstimateDetailsTabsState> {
-    constructor(props: EstimateDetailsTabsProps & RouteComponentProps) {
-        super(props);
-        this.state = {
-            estimateId: (this.props.match.params as any).id,
-            estimateName: '',
-            estimateDetails: [],
-            payments: [],
-            estimateDetailsWork: [],
-            estimateDetailsMaterial: [],
-            paymentsWork: [],
-            paymentsMaterial: [],
-            activeTab: '1',
-            complete: false,
-            response: null,
-            headers: null,
-        };
-    }
+interface EstimateDetailsTabsProps extends RouterProps {
+    match: any
+}
 
-    componentDidMount() {
-        const estimateId = this.state.estimateId;
-        if (estimateId) {
-            this.props.findEstimateById(estimateId);
-            this.props.findAllEstimateDetails(estimateId);
-            this.props.findAllPaymentsByEstimateId(estimateId);
-        }
-    }
+const EstimateDetailsTabs: React.FC<EstimateDetailsTabsProps> = ({match}) => {
 
-    downloadExcelByCategory = (category: string): void => {
+    const id = match.params.id
+    const dispatch = useDispatch()
+
+    const show = useSelector((state: IRootState) => state.app.show)
+    const messageText = useSelector((state: IRootState) => state.app.messageText)
+    const messageType = useSelector((state: IRootState) => state.app.messageType)
+
+    const estimate = useSelector((state: IRootState) => state.estimates.estimate)
+    const estimateDetails = useSelector((state: IRootState) => state.estimateDetails.estimateDetails)
+    const estimateDetailsWork = useSelector((state: IRootState) => state.estimateDetails.estimateDetailsWork)
+    const estimateDetailsMaterial = useSelector((state: IRootState) => state.estimateDetails.estimateDetailsMaterial)
+    const paymentsWork = useSelector((state: IRootState) => state.payments.paymentsWork)
+    const paymentsMaterial = useSelector((state: IRootState) => state.payments.paymentsMaterial)
+    const [activeTab, setActiveTab] = useState('1')
+    const [stateEstimateDetailsWork, setStateEstimateDetailsWork] = useState(estimateDetailsWork)
+    const [stateEstimateDetailsMaterial, setStateEstimateDetailsMaterial] = useState(estimateDetailsMaterial)
+
+    useEffect(() => {
+        dispatch(findEstimateById(id))
+        dispatch(findAllEstimateDetails(id))
+        dispatch(findAllPaymentsByEstimateId(id))
+    }, [dispatch])
+
+    const downloadExcelByCategory = (category: string): void => {
         fetch("http://localhost:8080/remsmet/download/excel/estimateId/"
-            + this.state.estimateId + "/category/" + category, {
+            + id + "/category/" + category, {
             method: 'GET'
         }).then(response => {
             if (response.headers.has('Content-Disposition') != null) {
@@ -97,15 +64,15 @@ class EstimateDetailsTabs extends React.Component<EstimateDetailsTabsProps & Rou
         })
     };
 
-    filterToEstimateDetailsWork = (estimateDetails: IEstimateDetail[]): IEstimateDetail[] => {
+    const filterToEstimateDetailsWork = (estimateDetails: IEstimateDetail[]): IEstimateDetail[] => {
         return estimateDetails.filter(estimateDetail => estimateDetail.category === Category.Works)
     }
 
-    filterToEstimateDetailsMaterial = (estimateDetails: IEstimateDetail[]): IEstimateDetail[] => {
+    const filterToEstimateDetailsMaterial = (estimateDetails: IEstimateDetail[]): IEstimateDetail[] => {
         return estimateDetails.filter(estimateDetail => estimateDetail.category === Category.Materials)
     }
 
-    calcPaymentsByCategory = (array: any[]): number => {
+    const calcPaymentsByCategory = (array: any[]): number => {
         let sum = 0;
         for (let i = 0; i < array.length; i++) {
             sum += array[i].amount;
@@ -113,7 +80,7 @@ class EstimateDetailsTabs extends React.Component<EstimateDetailsTabsProps & Rou
         return sum
     }
 
-    calcEstimateDetailsByCategory = (array: any[]) => {
+    const calcEstimateDetailsByCategory = (array: any[]) => {
         let sum = 0;
         for (let i = 0; i < array.length; i++) {
             sum += array[i].cost;
@@ -121,7 +88,7 @@ class EstimateDetailsTabs extends React.Component<EstimateDetailsTabsProps & Rou
         return sum
     }
 
-    calcEstimateDetailsByCategoryWithMarkUp = (array: any[]) => {
+    const calcEstimateDetailsByCategoryWithMarkUp = (array: any[]) => {
         let sum = 0;
         for (let i = 0; i < array.length; i++) {
             sum += array[i].costClient;
@@ -129,7 +96,7 @@ class EstimateDetailsTabs extends React.Component<EstimateDetailsTabsProps & Rou
         return sum
     };
 
-    calcEstimateDetailsByCategoryCompleteTrue = (array: any[]): number => {
+    const calcEstimateDetailsByCategoryCompleteTrue = (array: any[]): number => {
         let sum = 0;
         for (let i = 0; i < array.length; i++) {
             if (array[i].complete) {
@@ -139,157 +106,110 @@ class EstimateDetailsTabs extends React.Component<EstimateDetailsTabsProps & Rou
         return sum
     }
 
-    calcPercentOfEstimateDetailsByCategoryComplete = (sumOfAllComplete: number, sumOfAllWithMarkUp: number): number => {
+    const calcPercentOfEstimateDetailsByCategoryComplete = (sumOfAllComplete: number, sumOfAllWithMarkUp: number): number => {
         return Math.ceil(sumOfAllComplete / (sumOfAllWithMarkUp / 100))
     }
 
-    handleSelect(activeTab: string): void {
-        this.setState({
-            activeTab: activeTab,
-        });
+    const handleSelect = (activeTab: string): void => {
+        setActiveTab(activeTab)
         if (activeTab === '2') {
-            this.setState({
-                estimateDetailsWork: this.filterToEstimateDetailsWork(this.state.estimateDetails)
-            })
+            setStateEstimateDetailsWork(filterToEstimateDetailsWork(estimateDetails))
         }
         if (activeTab === '3') {
-            this.setState({
-                estimateDetailsMaterial: this.filterToEstimateDetailsMaterial(this.state.estimateDetails)
-            })
+           setStateEstimateDetailsMaterial(filterToEstimateDetailsMaterial(estimateDetails))
         }
     }
 
-    toggleCompleteWork = (id: number): void => {
-        this.setState({
-            estimateDetailsWork: this.props.estimateDetailsWork.map(estimateDetail => {
-                    if (estimateDetail.id === id) {
-                        estimateDetail.complete = !estimateDetail.complete;
-                        this.props.updateEstimateDetail(estimateDetail);
-                    }
-                    return estimateDetail;
+    const toggleCompleteWork = (id: number): void => {
+        setStateEstimateDetailsWork(estimateDetailsWork.map(estimateDetail => {
+                if (estimateDetail.id === id) {
+                    estimateDetail.complete = !estimateDetail.complete;
+                    dispatch(updateEstimateDetail(estimateDetail));
                 }
-            )
-        })
+                return estimateDetail;
+            }
+        ))
     }
 
-    toggleCompleteMaterial = (id: number): void => {
-        this.setState({
-            estimateDetailsMaterial: this.props.estimateDetailsMaterial.map(estimateDetail => {
-                    if (estimateDetail.id === id) {
-                        estimateDetail.complete = !estimateDetail.complete;
-                        this.props.updateEstimateDetail(estimateDetail);
-                    }
-                    return estimateDetail;
+    const toggleCompleteMaterial = (id: number): void => {
+        setStateEstimateDetailsMaterial(estimateDetailsMaterial.map(estimateDetail => {
+                if (estimateDetail.id === id) {
+                    estimateDetail.complete = !estimateDetail.complete;
+                    dispatch(updateEstimateDetail(estimateDetail));
                 }
-            )
-        })
+                return estimateDetail;
+            }
+        ))
     };
 
-    render() {
-        const {activeTab} = this.state;
-        const estimateId = this.props.estimate.id
-        const estimateName = this.props.estimate.name
-        const estimateDetails = this.props.estimateDetails
-        const estimateDetailsWork = this.props.estimateDetailsWork
-        const estimateDetailsMaterial = this.props.estimateDetailsMaterial
-        const paymentsWork = this.props.paymentsWork
-        const paymentsMaterial = this.props.paymentsMaterial
+    const sumOfWorks = calcEstimateDetailsByCategory(estimateDetailsWork);
+    const sumOfMaterials = calcEstimateDetailsByCategory(estimateDetailsMaterial);
+    const sumOfWorksWithMarkUp = calcEstimateDetailsByCategoryWithMarkUp(estimateDetailsWork);
+    const sumOfMaterialsWithMarkUp = calcEstimateDetailsByCategoryWithMarkUp(estimateDetailsMaterial);
+    const sumOfWorksComplete = calcEstimateDetailsByCategoryCompleteTrue(estimateDetailsWork);
+    const sumOfMaterialsComplete = calcEstimateDetailsByCategoryCompleteTrue(estimateDetailsMaterial)
+    const sumOfMarkUpFromWorks = Math.round((sumOfWorksWithMarkUp - sumOfWorks) * 100) / 100;
+    const sumOfMarkUpFromMaterials = Math.round((sumOfMaterialsWithMarkUp - sumOfMaterials) * 100) / 100;
+    const percentOfWorksComplete = calcPercentOfEstimateDetailsByCategoryComplete(
+        sumOfWorksComplete, sumOfWorksWithMarkUp);
+    const percentOfMaterialsComplete = calcPercentOfEstimateDetailsByCategoryComplete(
+        sumOfMaterialsComplete, sumOfMaterialsWithMarkUp);
+    const sumOfPaymentsWork = calcPaymentsByCategory(paymentsWork)
+    const sumOfPaymentsMaterial = calcPaymentsByCategory(paymentsMaterial)
 
-        const sumOfWorks = this.calcEstimateDetailsByCategory(estimateDetailsWork);
-        const sumOfMaterials = this.calcEstimateDetailsByCategory(estimateDetailsMaterial);
-        const sumOfWorksWithMarkUp = this.calcEstimateDetailsByCategoryWithMarkUp(estimateDetailsWork);
-        const sumOfMaterialsWithMarkUp = this.calcEstimateDetailsByCategoryWithMarkUp(estimateDetailsMaterial);
-        const sumOfWorksComplete = this.calcEstimateDetailsByCategoryCompleteTrue(estimateDetailsWork);
-        const sumOfMaterialsComplete = this.calcEstimateDetailsByCategoryCompleteTrue(estimateDetailsMaterial)
-        const sumOfMarkUpFromWorks = Math.round((sumOfWorksWithMarkUp - sumOfWorks) * 100) / 100;
-        const sumOfMarkUpFromMaterials = Math.round((sumOfMaterialsWithMarkUp - sumOfMaterials) * 100) / 100;
-        const percentOfWorksComplete = this.calcPercentOfEstimateDetailsByCategoryComplete(
-            sumOfWorksComplete, sumOfWorksWithMarkUp);
-        const percentOfMaterialsComplete = this.calcPercentOfEstimateDetailsByCategoryComplete(
-            sumOfMaterialsComplete, sumOfMaterialsWithMarkUp);
-        const sumOfPaymentsWork = this.calcPaymentsByCategory(paymentsWork)
-        const sumOfPaymentsMaterial = this.calcPaymentsByCategory(paymentsMaterial)
-
-        return (
-            <Fragment>
-                <MyToast show={this.props.show} message={this.props.messageText} type={this.props.messageType}/>
-                <div className="border border-dark bg-white m-3">
-                    <Tabs id="estimateDetailTabs"
-                          activeKey={activeTab}
-                          onSelect={(activeTab: string) => this.handleSelect(activeTab)}>
-                        <Tab eventKey={1} title="Общая смета">
-                            <GeneralTab estimateName={estimateName}
-                                        estimateDetails={estimateDetails}
-                                        estimateId={estimateId}
-                                        onDeleteEstimateDetail={this.props.deleteEstimateDetail}
-                                        sumOfWorks={sumOfWorks}
-                                        sumOfMaterials={sumOfMaterials}
-                                        sumOfMarkUpFromWorks={sumOfMarkUpFromWorks}
-                                        sumOfMarkUpFromMaterials={sumOfMarkUpFromMaterials}
-                                        sumOfWorksWithMarkUp={sumOfWorksWithMarkUp}
-                                        sumOfMaterialsWithMarkUp={sumOfMaterialsWithMarkUp}
-                            />
-                        </Tab>
-                        <Tab eventKey={2} title="Смета работ">
-                            <CategoryTab estimateName={estimateName}
-                                         category={Category.Works}
-                                         categoryEstimateDetails={estimateDetailsWork}
-                                         onChange={this.toggleCompleteWork}
-                                         onDownloadExcel={this.downloadExcelByCategory}
-                                         percent={percentOfWorksComplete}
-                                         valueAll={sumOfWorksWithMarkUp}
-                                         valueDone={sumOfWorksComplete}
-                                         valuePay={sumOfPaymentsWork}
-                            />
-                        </Tab>
-                        <Tab eventKey={3} title="Смета закупок">
-                            <CategoryTab estimateName={estimateName}
-                                         category={Category.Materials}
-                                         categoryEstimateDetails={estimateDetailsMaterial}
-                                         onChange={this.toggleCompleteMaterial}
-                                         onDownloadExcel={this.downloadExcelByCategory}
-                                         percent={percentOfMaterialsComplete}
-                                         valueAll={sumOfMaterialsWithMarkUp}
-                                         valueDone={sumOfMaterialsComplete}
-                                         valuePay={sumOfPaymentsMaterial}
-                            />
-                        </Tab>
-                        <Tab eventKey={4} title="Смета клиента">
-                            <ClientTab estimateName={estimateName}
-                                       estimateDetails={estimateDetails}
-                                       estimateId={estimateId}
-                                       sumOfWorksWithMarkUp={sumOfWorksWithMarkUp}
-                                       sumOfMaterialsWithMarkUp={sumOfMaterialsWithMarkUp}
-                            />
-                        </Tab>
-                    </Tabs>
-                </div>
-            </Fragment>
-        )
-    }
+    return (
+        <Fragment>
+            <MyToast show={show} message={messageText} type={messageType}/>
+            <div className="border border-dark bg-white m-3">
+                <Tabs id="estimateDetailTabs"
+                      activeKey={activeTab}
+                      onSelect={(activeTab: string) => handleSelect(activeTab)}>
+                    <Tab eventKey={1} title="Общая смета">
+                        <GeneralTab estimate={estimate}
+                                    estimateDetails={estimateDetails}
+                                    sumOfWorks={sumOfWorks}
+                                    sumOfMaterials={sumOfMaterials}
+                                    sumOfMarkUpFromWorks={sumOfMarkUpFromWorks}
+                                    sumOfMarkUpFromMaterials={sumOfMarkUpFromMaterials}
+                                    sumOfWorksWithMarkUp={sumOfWorksWithMarkUp}
+                                    sumOfMaterialsWithMarkUp={sumOfMaterialsWithMarkUp}
+                        />
+                    </Tab>
+                    <Tab eventKey={2} title="Смета работ">
+                        <CategoryTab estimateName={estimate.name}
+                                     category={Category.Works}
+                                     categoryEstimateDetails={estimateDetailsWork}
+                                     onChange={toggleCompleteWork}
+                                     onDownloadExcel={downloadExcelByCategory}
+                                     percent={percentOfWorksComplete}
+                                     valueAll={sumOfWorksWithMarkUp}
+                                     valueDone={sumOfWorksComplete}
+                                     valuePay={sumOfPaymentsWork}
+                        />
+                    </Tab>
+                    <Tab eventKey={3} title="Смета закупок">
+                        <CategoryTab estimateName={estimate.name}
+                                     category={Category.Materials}
+                                     categoryEstimateDetails={estimateDetailsMaterial}
+                                     onChange={toggleCompleteMaterial}
+                                     onDownloadExcel={downloadExcelByCategory}
+                                     percent={percentOfMaterialsComplete}
+                                     valueAll={sumOfMaterialsWithMarkUp}
+                                     valueDone={sumOfMaterialsComplete}
+                                     valuePay={sumOfPaymentsMaterial}
+                        />
+                    </Tab>
+                    <Tab eventKey={4} title="Смета клиента">
+                        <ClientTab estimate={estimate}
+                                   estimateDetails={estimateDetails}
+                                   sumOfWorksWithMarkUp={sumOfWorksWithMarkUp}
+                                   sumOfMaterialsWithMarkUp={sumOfMaterialsWithMarkUp}
+                        />
+                    </Tab>
+                </Tabs>
+            </div>
+        </Fragment>
+    )
 }
 
-const mapStateToProps = (state: any) => {
-    return {
-        show: state.app.show,
-        messageText: state.app.messageText,
-        messageType: state.app.messageType,
-        estimate: state.estimates.estimate,
-        estimateDetails: state.estimateDetails.estimateDetails,
-        estimateDetailsWork: state.estimateDetails.estimateDetailsWork,
-        estimateDetailsMaterial: state.estimateDetails.estimateDetailsMaterial,
-        payments: state.payments.payments,
-        paymentsWork: state.payments.paymentsWork,
-        paymentsMaterial: state.payments.paymentsMaterial,
-    }
-}
-const mapDispatchToProps = (dispatch: Dispatch<any>) => {
-    return {
-        findAllEstimateDetails: (estimateId: number) => (dispatch(findAllEstimateDetails(estimateId))),
-        findEstimateById: (estimateId: number) => (dispatch(findEstimateById(estimateId))),
-        findAllPaymentsByEstimateId: (estimateId: number) => (dispatch(findAllPaymentsByEstimateId(estimateId))),
-        deleteEstimateDetail: (estimateDetailId: number) => (dispatch(deleteEstimateDetail(estimateDetailId))),
-        updateEstimateDetail: (estimateDetail: IEstimateDetail) => (dispatch(updateEstimateDetail(estimateDetail)))
-    }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(EstimateDetailsTabs)
+export default EstimateDetailsTabs

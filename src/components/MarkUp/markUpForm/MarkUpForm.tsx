@@ -20,13 +20,16 @@ interface MarkUpFormProps extends RouterProps {
 
 const MarkUpForm: React.FC<MarkUpFormProps> = ({history, match}) => {
 
+    const dispatch = useDispatch()
+
     const show = useSelector((state: IRootState) => state.app.show)
     const messageText = useSelector((state: IRootState) => state.app.messageText)
     const messageType = useSelector((state: IRootState) => state.app.messageType)
+
     const markUpId = useSelector((state: IRootState) => state.markUps.markUp.id)
     const markUpName = useSelector((state: IRootState) => state.markUps.markUp.markUpName)
     const markUpPercent = useSelector((state: IRootState) => state.markUps.markUp.markUpPercent)
-    const dispatch = useDispatch()
+    const [percent, setPercent] = useState(markUpPercent)
 
     useEffect(() => {
         const markUpId = parseInt(match.params.id)
@@ -34,8 +37,6 @@ const MarkUpForm: React.FC<MarkUpFormProps> = ({history, match}) => {
             dispatch(findMarkUpById(markUpId));
         }
     }, [dispatch])
-
-    const [percent, setPercent] = useState(0)
 
     const update = (event: FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
@@ -51,10 +52,6 @@ const MarkUpForm: React.FC<MarkUpFormProps> = ({history, match}) => {
     const markUpList = (): void => {
         return history.push("/markUps")
     };
-
-    // const markUpChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    //     setPercent(parseInt(event.target.value))
-    // };
 
     return (
         <Container className="text-center col-5">
@@ -73,7 +70,7 @@ const MarkUpForm: React.FC<MarkUpFormProps> = ({history, match}) => {
                                 <Col sm="3">
                                     <Form.Control required autoComplete="off"
                                                   type="text" name="percent"
-                                                  value={markUpPercent}
+                                                  value={percent}
                                                   onChange={event => setPercent(parseInt(event.target.value))}/>
                                 </Col>
                             </Form.Group>

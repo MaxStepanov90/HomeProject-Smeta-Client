@@ -12,12 +12,14 @@ export enum Links {
     FindAllEstimateDetails = "http://localhost:8080/remsmet/estimateDetails/estimateId/",
     DeleteEstimateDetail = "http://localhost:8080/remsmet/estimateDetails/",
     UpdateEstimateDetail = "http://localhost:8080/remsmet/estimateDetails",
+    SaveEstimateDetail = "http://localhost:8080/remsmet/estimateDetails",
 
     FindAllMarkUps = "http://localhost:8080/remsmet/markUps",
     FindMarkUpById = "http://localhost:8080/remsmet/markUps/",
     UpdateMarkUp = "http://localhost:8080/remsmet/markUps",
     DeleteMarkUp = "http://localhost:8080/remsmet/markUps/",
 
+    SavePayment = "http://localhost:8080/remsmet/payments",
     FindAllPaymentsByProjectId = "http://localhost:8080/remsmet/payments/projectId/",
     FindAllPaymentsByEstimateId = "http://localhost:8080/remsmet/payments/estimateId/"
 }

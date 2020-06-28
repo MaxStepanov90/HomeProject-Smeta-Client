@@ -1,5 +1,4 @@
-export interface IProject {
-    id: number ,
+export interface INewProject {
     name: string,
     address: string,
     contract: string,

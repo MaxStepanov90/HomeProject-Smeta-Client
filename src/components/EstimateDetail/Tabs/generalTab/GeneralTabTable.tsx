@@ -4,14 +4,16 @@ import {Button} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrash} from "@fortawesome/free-solid-svg-icons";
 import {IEstimateDetail} from "../../../../interfaces/IEstimateDetail";
+import {useDispatch} from "react-redux";
+import {deleteEstimateDetail} from "../../../../service/actions/estimateDetailActions";
 
 type TabGeneralTableProps = {
     estimateDetails: IEstimateDetail[],
-    onDeleteEstimateDetail: (id: number) => void
 }
 export const GeneralTabTable: React.FC<TabGeneralTableProps> = (
-    {estimateDetails, onDeleteEstimateDetail}
+    {estimateDetails}
     ) => {
+    const dispatch = useDispatch()
 
     return (
         <table className="table table-hover">
@@ -49,7 +51,7 @@ export const GeneralTabTable: React.FC<TabGeneralTableProps> = (
                         <td>
                             <ButtonGroup>
                                 <Button size="sm" variant="outline-danger"
-                                        onClick={() => onDeleteEstimateDetail(estimateDetail.id)}>
+                                        onClick={() => dispatch(deleteEstimateDetail(estimateDetail.id))}>
                                     <FontAwesomeIcon icon={faTrash}/>
                                 </Button>
                             </ButtonGroup>

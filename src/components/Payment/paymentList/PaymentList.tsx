@@ -28,7 +28,6 @@ const PaymentList: React.FC<PaymentListProps> = ({history}) => {
     }, [dispatch])
 
     const paymentList = (projectId: number): void => {
-        console.log(projectId)
         return history.push("/projectInfo/" + projectId)
     };
 

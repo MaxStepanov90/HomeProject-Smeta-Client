@@ -9,6 +9,8 @@ import {
     FIND_ALL_ESTIMATE_DETAILS,
     TOGGLE_ESTIMATE_DETAIL
 } from "../actionTypes/estimateDetailActionTypes";
+import {INewProject} from "../../interfaces/INewProject";
+import {INewEstimateDetail} from "../../interfaces/INewEstimateDetail";
 
 
 const findAllEstimateDetailsSuccess = (estimateDetails: IEstimateDetail[]) => {
@@ -71,6 +73,28 @@ export function updateEstimateDetail(estimateDetail: IEstimateDetail) {
                 .then(estimateDetail => {
                     if (estimateDetail) {
                         dispatch(findAllEstimateDetails(estimateDetail.estimateId))
+                    }
+                })
+        } catch (e) {
+            dispatch(showAppMessage(MyToastMessageText.SomeError, MyToastMessageType.Error))
+        }
+    }
+}
+
+export function saveNewEstimateDetail(estimateDetail: INewEstimateDetail) {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            await fetch(Links.SaveEstimateDetail, {
+                method: 'POST',
+                body: JSON.stringify(estimateDetail),
+                headers
+            })
+                .then(response => response.json())
+                .then(estimateDetail => {
+                    if (estimateDetail) {
+                        dispatch(showAppMessage(MyToastMessageText.SuccessSave, MyToastMessageType.Success))
                     }
                 })
         } catch (e) {

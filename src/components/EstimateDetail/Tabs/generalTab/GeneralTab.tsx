@@ -5,9 +5,10 @@ import {IEstimateDetail} from "../../../../interfaces/IEstimateDetail";
 import {Link} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlusSquare} from "@fortawesome/free-solid-svg-icons";
+import {IEstimate} from "../../../../interfaces/IEstimate.";
 
 type TabGeneralProps = {
-    estimateName: string,
+    estimate: IEstimate,
     sumOfWorks: number,
     sumOfMaterials: number,
     sumOfMarkUpFromWorks: number,
@@ -15,19 +16,17 @@ type TabGeneralProps = {
     sumOfWorksWithMarkUp: number,
     sumOfMaterialsWithMarkUp: number,
     estimateDetails: IEstimateDetail[],
-    estimateId: number,
-    onDeleteEstimateDetail: (estimateDetailId: number) => void
 }
 export const GeneralTab: React.FC<TabGeneralProps> = (
     {
-        estimateName, sumOfWorks, sumOfMaterials, sumOfMarkUpFromWorks,
+        estimate, sumOfWorks, sumOfMaterials, sumOfMarkUpFromWorks,
         sumOfMarkUpFromMaterials, sumOfWorksWithMarkUp, sumOfMaterialsWithMarkUp,
-        estimateDetails, estimateId, onDeleteEstimateDetail
-    }) => {
+        estimateDetails}) => {
+
     return (
         <Fragment>
             <div className="container-fluid my-4">
-                <GeneralTabDescription estimateName={estimateName}
+                <GeneralTabDescription estimateName={estimate.name}
                                        sumOfWorks={sumOfWorks}
                                        sumOfMaterials={sumOfMaterials}
                                        sumOfWorksWithMarkUp={sumOfWorksWithMarkUp}
@@ -36,16 +35,14 @@ export const GeneralTab: React.FC<TabGeneralProps> = (
                                        sumOfMarkUpFromMaterials={sumOfMarkUpFromMaterials}
                 />
                 <div className="container-fluid mb-2">
-                    <Link to={{pathname: "/addEstimateDetail", state: {estimateId: estimateId}}}
+                    <Link to={{pathname: "/addEstimateDetail", state: {estimateId: estimate.id}}}
                           className="btn btn-sm btn-primary">
                         <FontAwesomeIcon icon={faPlusSquare}/>&nbsp;
                         Добавить позицию
                     </Link>
                 </div>
                 <div className="container-fluid">
-                    <GeneralTabTable estimateDetails={estimateDetails}
-                                     onDeleteEstimateDetail={onDeleteEstimateDetail}
-                    />
+                    <GeneralTabTable estimateDetails={estimateDetails}/>
                 </div>
             </div>
         </Fragment>

@@ -1,125 +1,84 @@
-import React, {Dispatch, Fragment} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import Card from "react-bootstrap/Card";
 import './ProjectStyle.css';
 import {MyToast} from "../../Generic/MyToast/MyToast";
 import {ProjectListHeader} from "./ProjectListHeader";
 import {ProjectListTable} from "./ProjectListTable";
 import {ProjectListFooter} from "./ProjectListFooter";
-import {connect} from "react-redux";
-import {deleteProject, findAllProjects} from "../../../service/actions/projectActions";
+import {useDispatch, useSelector} from "react-redux";
+import {findAllProjects} from "../../../service/actions/projectActions";
+import {IRootState} from "../../../interfaces/IRootState";
 
-type ProjectListProps = {
-    show: any,
-    messageText: any,
-    messageType: any,
-    projects: any,
-    findAllProjects: () => void,
-    deleteProject: (projectId: any) => void
-}
-type ProjectListState = {
-    currentPage: number,
-    projectsPerPage: number,
-}
+const ProjectList: React.FC = () => {
 
-class ProjectList extends React.Component<ProjectListProps, ProjectListState> {
-    constructor(props: ProjectListProps) {
-        super(props);
-        this.state = {
-            currentPage: 1,
-            projectsPerPage: 6,
-        };
-    }
+    const projectsPerPage = 5
+    const dispatch = useDispatch()
+    const show = useSelector((state: IRootState) => state.app.show)
+    const messageText = useSelector((state: IRootState) => state.app.messageText)
+    const messageType = useSelector((state: IRootState) => state.app.messageType)
+    const projects = useSelector((state: IRootState) => state.projects.projects)
+    const [currentPage, setCurrentPage] = useState(1)
 
-    componentDidMount() {
-        this.props.findAllProjects();
-    }
+    useEffect(() => {
+        dispatch(findAllProjects())
+    }, [dispatch])
 
-    firstPage = () => {
-        if (this.state.currentPage > 1) {
-            this.setState({
-                currentPage: 1
-            });
+    const firstPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(1)
         }
     };
 
-    prevPage = () => {
-        if (this.state.currentPage > 1) {
-            this.setState({
-                currentPage: this.state.currentPage - 1
-            });
+    const prevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1)
         }
     };
 
-    lastPage = () => {
-        let usersLength = this.props.projects.length;
-        let condition = Math.ceil(usersLength / this.state.projectsPerPage);
-        if (this.state.currentPage < condition) {
-            this.setState({
-                currentPage: condition
-            });
+    const lastPage = () => {
+        let usersLength = projects.length;
+        let condition = Math.ceil(usersLength / projectsPerPage);
+        if (currentPage < condition) {
+            setCurrentPage(condition)
         }
     };
 
-    nextPage = () => {
-        if (this.state.currentPage < Math.ceil(this.props.projects.length / this.state.projectsPerPage)) {
-            this.setState({
-                currentPage: this.state.currentPage + 1
-            });
+    const nextPage = () => {
+        if (currentPage < Math.ceil(projects.length / projectsPerPage)) {
+            setCurrentPage(currentPage + 1)
         }
     };
 
-    changePage = (event: any) => {
-        this.setState({
-            [event.target.name]: parseInt(event.target.value)
-        } as any)
+    const changePage = (event: any) => {
+        setCurrentPage(event.target.value)
     };
 
-    render() {
-        const {currentPage, projectsPerPage} = this.state;
-        const projects = this.props.projects;
-        const lastIndex = currentPage * projectsPerPage;
-        const firstIndex = lastIndex - projectsPerPage;
-        const currentProjects = projects.slice(firstIndex, lastIndex);
-        const totalPages = Math.round(projects.length / projectsPerPage);
+    const lastIndex = currentPage * projectsPerPage;
+    const firstIndex = lastIndex - projectsPerPage;
+    const currentProjects = projects.slice(firstIndex, lastIndex);
+    const totalPages = Math.ceil(projects.length / projectsPerPage);
 
-        return (
-            <Fragment>
-                <MyToast show={this.props.show} message={this.props.messageText} type={this.props.messageType}/>
-                <Card className="border border-dark m-3">
-                    <Card.Header>
-                        <ProjectListHeader currentPage={currentPage}/>
-                    </Card.Header>
-                    <Card.Body>
-                        <ProjectListTable projects={currentProjects}
-                                          onDeleteProject={this.props.deleteProject}
+    return (
+        <Fragment>
+            <MyToast show={show} message={messageText} type={messageType}/>
+            <Card className="border border-dark m-3">
+                <Card.Header>
+                    <ProjectListHeader/>
+                </Card.Header>
+                <Card.Body>
+                    <ProjectListTable projects={currentProjects}/>
+                </Card.Body>
+                {currentProjects.length > 0 ?
+                    <Card.Footer>
+                        <ProjectListFooter currentPage={currentPage} totalPages={totalPages}
+                                           onFirstPage={firstPage} onPrevPage={prevPage}
+                                           onChangePage={changePage} onNextPage={nextPage}
+                                           onLastPage={lastPage}
                         />
-                    </Card.Body>
-                    {projects.length > 0 ?
-                        <Card.Footer>
-                            <ProjectListFooter currentPage={currentPage} totalPages={totalPages}
-                                               onFirstPage={this.firstPage} onPrevPage={this.prevPage}
-                                               onChangePage={this.changePage} onNextPage={this.nextPage}
-                                               onLastPage={this.lastPage}
-                            />
-                        </Card.Footer> : null}
-                </Card>
-            </Fragment>
-        )
-    }
+                    </Card.Footer> : null}
+            </Card>
+        </Fragment>
+    )
 }
 
-const mapStateToProps = (state: any) => {
-    return {
-        show: state.app.show,
-        messageText: state.app.messageText,
-        messageType: state.app.messageType,
-        projects: state.projects.projects
-    }
-}
-const mapDispatchToProps = (dispatch: Dispatch<any>) => {
-    return {
-        findAllProjects: () => (dispatch(findAllProjects())),
-        deleteProject: (projectId: number) => (dispatch(deleteProject(projectId))),
-    }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectList)
+export default ProjectList

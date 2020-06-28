@@ -6,8 +6,8 @@ export interface IEstimateDetail {
     quantity: number,
     price: number,
     cost: number,
-    priceClient: number,
-    costClient: number
+    priceClient?: number,
+    costClient?: number
     complete?: boolean,
 
 }

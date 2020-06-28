@@ -1,137 +1,119 @@
-import React, {FormEvent} from "react";
+import React, {FormEvent, useState} from "react";
 import {Button, Card, Col, Container, Form} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFolderOpen, faPlus, faSave} from "@fortawesome/free-solid-svg-icons";
-import {RouteComponentProps} from "react-router-dom";
 import {MyToast} from "../../Generic/MyToast/MyToast";
+import {useDispatch, useSelector} from "react-redux";
+import {IRootState} from "../../../interfaces/IRootState";
+import {Category} from "../../../utils/Category";
+import {saveNewPayment} from "../../../service/actions/paymentActions";
 
-type PaymentFormState = {
-    show: boolean,
-    category: string,
-    estimateId: number,
-    amount: string,
-    comment: string,
+
+interface RouterProps {
+    estimateId: any;
 }
-export default class PaymentForm extends React.Component<RouteComponentProps, PaymentFormState> {
-    constructor(props: RouteComponentProps) {
-        super(props);
-        this.state = {
-            show: false,
-            category: 'работы',
-            estimateId: (this.props.history.location.state as any).estimateId,
-            amount: '',
-            comment: ''
-        };
-    }
 
-    submitPayment = (event: FormEvent<HTMLFormElement>): void => {
+interface PaymentFormProps extends RouterProps {
+    history: any
+}
+
+const PaymentForm: React.FC<PaymentFormProps> = ({history}) => {
+
+    const dispatch = useDispatch()
+
+    const show = useSelector((state: IRootState) => state.app.show)
+    const messageText = useSelector((state: IRootState) => state.app.messageText)
+    const messageType = useSelector((state: IRootState) => state.app.messageType)
+
+    const id = history.location.state.estimateId
+    const [paymentAmount, setPaymentAmount] = useState(0)
+    const [paymentComment, setPaymentComment] = useState('')
+    const [paymentCategory, setPaymentCategory] = useState('')
+
+    const submitPayment = (event: FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
-        const payment = {
-            amount: this.state.amount,
-            comment: this.state.comment,
-            category: this.state.category,
-            estimateId: this.state.estimateId
+        const newPayment = {
+            amount: paymentAmount,
+            comment: paymentComment,
+            category: paymentCategory,
+            estimateId: id
         };
-        const headers = new Headers();
-        headers.append('Content-Type', 'application/json');
+        dispatch(saveNewPayment(newPayment))
+        setTimeout(() => estimateDetailList(id),1000)
 
-        fetch("http://localhost:8080/remsmet/payments", {
-            method: 'POST',
-            body: JSON.stringify(payment),
-            headers
-        })
-            .then(response => response.json())
-            .then(payment => {
-                if (payment) {
-                    this.setState({show: true});
-                    setTimeout(() => this.setState({show: false}), 1000);
-                    setTimeout(() => this.estimateDetailList(this.state.estimateId), 1100);
-                } else {
-                    this.setState({show: false})
-                }
-            });
-        this.setState({
-            amount: '',
-            category: 'работы',
-            comment: ''
-        });
+        setPaymentAmount(0)
+        setPaymentCategory('')
+        setPaymentComment('')
     };
 
-    estimateDetailList = (estimateId: number): void => {
-        return this.props.history.push("/estimate/" + estimateId)
+    const estimateDetailList = (estimateId: number): void => {
+        return history.push("/estimate/" + estimateId)
     };
 
-    paymentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({
-            [event.target.name]: event.target.value
-        } as any)
-    };
+    const amountInputField =
+        <Form.Group as={Col} controlId="formGridAmount">
+            <Form.Label>Сумма</Form.Label>
+            <Form.Control required autoComplete="off"
+                          type="test" name="amount"
+                          value={paymentAmount}
+                          onChange={event => setPaymentAmount(parseInt(event.target.value))}
+            />
+        </Form.Group>
 
-    render() {
-        const {amount, category, comment, estimateId, show} = this.state;
+    const сategoryInputField =
+        <Form.Group as={Col} controlId="formGridCategory">
+            <Form.Label>Категория</Form.Label>
+            <Form.Control required as="select"
+                          custom onChange={event => setPaymentCategory(event.target.value)}
+                          name="category"
+                          value={paymentCategory}>
+                <option value={Category.Works}>{Category.Works}</option>
+                <option value={Category.Materials}>{Category.Materials}</option>
+            </Form.Control>
+        </Form.Group>
 
-        const amountInputField =
-            <Form.Group as={Col} controlId="formGridAmount">
-                <Form.Label>Сумма</Form.Label>
-                <Form.Control required autoComplete="off"
-                              type="test" name="amount"
-                              value={amount} onChange={this.paymentChange}
-                              placeholder="150000.0"/>
-            </Form.Group>
+    const commentInputField =
+        <Form.Group as={Col} controlId="formGridComment">
+            <Form.Label>Комментарий к платежу</Form.Label>
+            <Form.Control required autoComplete="off"
+                          as="textarea"
+                          rows={3}
+                          type="test" name="comment"
+                          value={paymentComment}
+                          onChange={event => setPaymentComment(event.target.value)}
+            />
+        </Form.Group>
 
-        const сategoryInputField =
-            <Form.Group as={Col} controlId="formGridCategory">
-                <Form.Label>Категория</Form.Label>
-                <Form.Control required as="select"
-                              custom onChange={this.paymentChange}
-                              name="category"
-                              value={category}>
-                    <option value="работы">работы</option>
-                    <option value="материалы">материалы</option>
-                </Form.Control>
-            </Form.Group>
-
-        const commentInputField =
-            <Form.Group as={Col} controlId="formGridComment">
-                <Form.Label>Комментарий к платежу</Form.Label>
-                <Form.Control required autoComplete="off"
-                              as="textarea"
-                              rows={3}
-                              type="test" name="comment"
-                              value={comment} onChange={this.paymentChange}
-                              placeholder="аванс за черновые работы"/>
-            </Form.Group>
-
-        return (
-            <Container>
-                <MyToast show={show} message={"Платеж добавлен"} type={"success"}/>
-                <Card className={"border border-dark"}>
-                    <Card.Header>
-                        <FontAwesomeIcon icon={faPlus}/>&nbsp;Новый платеж
-                    </Card.Header>
-                    <Form onSubmit={this.submitPayment} id="paymentFormId">
-                        <Card.Body>
-                            <Form.Row>
-                                {amountInputField}
-                                {сategoryInputField}
-                            </Form.Row>
-                            <Form.Row>
-                                {commentInputField}
-                            </Form.Row>
-                        </Card.Body>
-                        <Card.Footer style={{"textAlign": "right"}}>
-                            <Button size="sm" variant="success" type="submit">
-                                <FontAwesomeIcon icon={faSave}/>&nbsp;Сохранить
-                            </Button>{' '}
-                            <Button size="sm" variant="info" type="button"
-                                    onClick={() => this.estimateDetailList(estimateId)}>
-                                <FontAwesomeIcon icon={faFolderOpen}/>&nbsp;Вернуться назад
-                            </Button>
-                        </Card.Footer>
-                    </Form>
-                </Card>
-            </Container>
-        )
-    }
-
+    return (
+        <Container>
+            <MyToast show={show} message={messageText} type={messageType}/>
+            <Card className={"border border-dark"}>
+                <Card.Header>
+                    <FontAwesomeIcon icon={faPlus}/>&nbsp;Новый платеж
+                </Card.Header>
+                <Form onSubmit={submitPayment} id="paymentFormId">
+                    <Card.Body>
+                        <Form.Row>
+                            {amountInputField}
+                            {сategoryInputField}
+                        </Form.Row>
+                        <Form.Row>
+                            {commentInputField}
+                        </Form.Row>
+                    </Card.Body>
+                    <Card.Footer style={{"textAlign": "right"}}>
+                        <Button size="sm" variant="success" type="submit">
+                            <FontAwesomeIcon icon={faSave}/>&nbsp;Сохранить
+                        </Button>{' '}
+                        <Button size="sm" variant="info" type="button"
+                                onClick={() => estimateDetailList(id)}>
+                            <FontAwesomeIcon icon={faFolderOpen}/>&nbsp;Вернуться назад
+                        </Button>
+                    </Card.Footer>
+                </Form>
+            </Card>
+        </Container>
+    )
 }
+
+export default PaymentForm
