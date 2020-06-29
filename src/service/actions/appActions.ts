@@ -2,8 +2,6 @@ import * as types from "../actionTypes/appActionTypes";
 import {Dispatch} from "react";
 
 export function showAppMessage(messageText: string, messageType: string) {
-    console.log("text", messageText)
-    console.log("type", messageType)
     return (dispatch: Dispatch<any>) => {
         dispatch({
             type: types.SHOW_APP_MESSAGE,
